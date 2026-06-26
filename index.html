@@ -1,621 +1,484 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Executive Reporting AI Agent — Architecture</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800;9..40,900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<title>Executive Reporting AI Agent — Production Architecture</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #060a10;
-  --surface: rgba(14,20,32,0.92);
-  --card: rgba(20,28,45,0.85);
-  --border: rgba(255,255,255,0.07);
-  --border-hover: rgba(56,189,248,0.3);
-  --text: #e2e8f0;
-  --text-dim: #94a3b8;
-  --text-muted: #64748b;
-  --white: #fff;
-  --sky: #38bdf8;
-  --sky-dim: rgba(14,165,233,0.15);
-  --green: #34d399;
-  --green-dim: rgba(16,185,129,0.12);
-  --rose: #fb7185;
-  --rose-dim: rgba(244,63,94,0.10);
-  --amber: #fbbf24;
-  --amber-dim: rgba(245,158,11,0.12);
-  --violet: #a78bfa;
-  --violet-dim: rgba(139,92,246,0.12);
+:root{
+  --bg:#f6f8fb;--paper:#ffffff;--ink:#0f172a;--ink-2:#334155;--dim:#64748b;--faint:#94a3b8;
+  --line:#e6ebf1;--line-soft:#eef2f7;--accent:#0284c7;--accent-bright:#0ea5e9;--accent-tint:#eff8fe;
+  --green:#059669;--green-tint:#ecfdf5;--rose:#e11d48;--rose-tint:#fff1f3;--amber:#b45309;--amber-tint:#fffbeb;--violet:#7c3aed;--violet-tint:#f5f3ff;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow:hidden;}
-a{color:var(--sky);text-decoration:none;}
+html{scroll-behavior:smooth;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.5;}
+.num{font-family:'Manrope',sans-serif;font-variant-numeric:tabular-nums;}
+a{color:var(--accent);text-decoration:none;}
 a:hover{text-decoration:underline;}
+.page{max-width:1200px;margin:0 auto;padding:0 24px 40px;}
 
-/* PAGE — viewport locked */
-.page{
-  max-width:1440px;
-  margin:0 auto;
-  padding:14px 28px 8px;
-  height:100vh;
-  display:flex;
-  flex-direction:column;
-}
-
-<!-- Header -->
-<header style="border-bottom:1px solid #D9D5CD; padding:24px 32px; display:flex; align-items:center; justify-content:space-between; font-family:Inter, system-ui, sans-serif; background:#F6F2EA; color:#0E0F12;">
-  <a href="https://solution4you.pro" style="font-weight:600; font-size:18px; text-decoration:none; color:#0E0F12;">
-    Solution4YOU
-  </a>
-  <nav style="font-size:14px;">
-    <a href="https://solution4you.pro" style="color:#0E0F12; text-decoration:none; margin-right:24px;">Home</a>
-    <a href="https://solution4you.pro#how-we-work" style="color:#0E0F12; text-decoration:none; margin-right:24px;">How We Work</a>
-    <a href="https://solution4you.pro#book" style="color:#C8631E; text-decoration:none; font-weight:500;">Book a Session</a>
-  </nav>
-</header>
-  
 /* HEADER */
-.hdr{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-shrink:0;}
-.hdr-left{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
-.hdr h1{font-size:22px;font-weight:900;letter-spacing:-0.5px;color:var(--white);line-height:1.1;}
-.hdr h1 em{font-style:normal;color:var(--sky);}
-.badges{display:flex;gap:5px;flex-wrap:wrap;}
-.badge{font-size:10px;font-weight:700;padding:3px 10px;border-radius:100px;border:1px solid;white-space:nowrap;}
-.b-prod{background:var(--green-dim);color:var(--green);border-color:rgba(16,185,129,0.3);}
-.b-sched{background:var(--sky-dim);color:var(--sky);border-color:rgba(14,165,233,0.3);}
-.b-hipaa{background:var(--rose-dim);color:var(--rose);border-color:rgba(244,63,94,0.3);}
-.b-cost{background:var(--amber-dim);color:var(--amber);border-color:rgba(245,158,11,0.3);}
-.hdr-contact{font-size:11px;color:var(--text-dim);text-align:right;line-height:1.5;}
-
-.divider{height:1px;background:var(--border);margin:6px 0;flex-shrink:0;}
+.hero{padding:30px 0 18px;border-bottom:1px solid var(--line);}
+.hero-top{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap;}
+.kicker{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+h1{font-size:34px;font-weight:800;letter-spacing:-1.2px;line-height:1.05;}
+.subhead{font-size:15px;color:var(--ink-2);margin-top:10px;max-width:600px;line-height:1.55;}
+.contact{font-size:12px;color:var(--dim);text-align:right;line-height:1.9;flex-shrink:0;}
+.contact .label{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--faint);}
+.badges{display:flex;gap:7px;flex-wrap:wrap;margin-top:16px;}
+.badge{font-size:11px;font-weight:600;padding:5px 12px;border-radius:100px;border:1px solid var(--line);background:var(--paper);color:var(--ink-2);display:inline-flex;align-items:center;gap:6px;}
+.badge .dot{width:6px;height:6px;border-radius:50%;}
+.badge.live{color:var(--green);border-color:#bbf7d0;background:var(--green-tint);}
+.badge.live .dot{background:var(--green);box-shadow:0 0 0 3px var(--green-tint);}
 
 /* TABS */
-.tabs{display:flex;gap:2px;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:2px;width:fit-content;margin-bottom:8px;flex-shrink:0;}
-.tab{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;padding:6px 18px;border-radius:7px;border:none;cursor:pointer;transition:all .2s;color:var(--text-dim);background:transparent;}
-.tab.on{background:var(--sky);color:#fff;box-shadow:0 2px 10px rgba(14,165,233,0.3);}
-.tab:hover:not(.on){color:var(--text);}
+.tabs{position:sticky;top:0;z-index:20;background:var(--bg);padding:14px 0 12px;display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line);flex-wrap:wrap;}
+.tab-group{display:inline-flex;background:var(--paper);border:1px solid var(--line);border-radius:11px;padding:4px;gap:3px;}
+.tab{font-family:'Inter',sans-serif;font-size:13px;font-weight:600;padding:9px 20px;border-radius:8px;border:none;cursor:pointer;background:transparent;color:var(--dim);transition:all .18s;display:flex;flex-direction:column;align-items:flex-start;line-height:1.2;}
+.tab .t-aud{font-size:10px;font-weight:600;color:var(--faint);margin-top:1px;}
+.tab.on{background:var(--accent);color:#fff;box-shadow:0 4px 14px rgba(2,132,199,.28);}
+.tab.on .t-aud{color:rgba(255,255,255,.8);}
+.tab:hover:not(.on){background:var(--accent-tint);color:var(--accent);}
+.tab-hint{font-size:12px;color:var(--faint);}
+.panel{display:none;padding-top:22px;}
+.panel.on{display:block;animation:fade .3s ease;}
+@keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
 
-.panel{display:none;flex:1;min-height:0;flex-direction:column;}
-.panel.on{display:flex;}
+/* EXEC */
+.exec-headline{font-size:27px;font-weight:800;letter-spacing:-0.9px;line-height:1.1;max-width:760px;margin-bottom:8px;}
+.exec-headline em{font-style:normal;color:var(--accent);}
+.exec-sub{font-size:14px;color:var(--dim);max-width:680px;line-height:1.6;margin-bottom:22px;}
+.eyebrow{font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--faint);margin-bottom:14px;}
 
-/* ═══════════════════════════════════════ */
-/*  EXEC VIEW                             */
-/* ═══════════════════════════════════════ */
+/* COMBO METRICS */
+.metrics{display:grid;grid-template-columns:1.5fr 3fr;gap:11px;margin-bottom:30px;}
+.hero-metric{background:linear-gradient(135deg,var(--accent),#0369a1);border-radius:16px;padding:24px;color:#fff;display:flex;flex-direction:column;justify-content:flex-end;opacity:0;transform:translateY(14px);transition:.5s;}
+.hero-metric.in{opacity:1;transform:none;}
+.hero-metric .v{font-size:66px;font-weight:800;letter-spacing:-3px;line-height:.9;}
+.hero-metric .l{font-size:14px;color:rgba(255,255,255,.92);margin-top:12px;line-height:1.4;font-weight:500;max-width:90%;}
+.grid6{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr);gap:11px;}
+.tile{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;justify-content:center;box-shadow:0 2px 10px rgba(15,23,42,.03);opacity:0;transform:translateY(14px);transition:.5s;}
+.tile.in{opacity:1;transform:none;}
+.tile .v{font-size:26px;font-weight:800;letter-spacing:-1px;line-height:1;color:var(--ink);}
+.tile .v small{font-size:13px;font-weight:600;color:var(--faint);}
+.tile .l{font-size:10px;font-weight:600;color:var(--dim);text-transform:uppercase;margin-top:8px;line-height:1.35;letter-spacing:.3px;}
+.tile.g .v{color:var(--green);}
 
-/* KEY RESULTS — top of page */
-.metrics-strip{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:8px;flex-shrink:0;}
-.m-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 6px;text-align:center;}
-.m-val{font-size:22px;font-weight:900;line-height:1;}
-.m-lbl{font-size:10px;font-weight:700;color:var(--text-dim);text-transform:uppercase;margin-top:3px;line-height:1.25;}
+/* DEMO */
+.demo{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 4px 18px rgba(15,23,42,.05);margin-bottom:30px;}
+.demo-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px;}
+.demo-title{font-size:16px;font-weight:800;}
+.demo-title span{color:var(--accent);}
+.demo-title .ds{display:block;font-size:11.5px;font-weight:500;color:var(--dim);margin-top:2px;}
+.run{font-family:'Inter',sans-serif;font-size:13px;font-weight:700;color:#fff;background:var(--accent);border:none;border-radius:9px;padding:11px 22px;cursor:pointer;transition:.18s;display:inline-flex;align-items:center;gap:8px;}
+.run:hover{background:#0369a1;}
+.run:disabled{opacity:.5;cursor:default;}
+.run .pulse{width:7px;height:7px;border-radius:50%;background:#fff;animation:bp 1.4s infinite;}
+@keyframes bp{0%,100%{opacity:1;}50%{opacity:.3;}}
+.pipe{display:flex;gap:7px;margin-bottom:16px;flex-wrap:wrap;}
+.pchip{flex:1;min-width:84px;background:#f8fafc;border:1px solid var(--line-soft);border-radius:9px;padding:9px 8px;text-align:center;transition:.3s;}
+.pchip .pn{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--faint);}
+.pchip .pt{font-size:11px;font-weight:700;color:var(--dim);margin-top:2px;transition:.3s;}
+.pchip.active{background:var(--accent-tint);border-color:var(--accent);transform:translateY(-2px);}
+.pchip.active .pt{color:var(--accent);}
+.pchip.done{background:var(--green-tint);border-color:#bbf7d0;}
+.pchip.done .pt{color:var(--green);}
 
-/* EXECUTIVE SUMMARY — condensed pain + transformation */
-.exec-summary{
-  background:linear-gradient(135deg,rgba(244,63,94,0.06),rgba(14,165,233,0.06));
-  border:1px solid rgba(255,255,255,0.08);
-  border-radius:8px;
-  padding:8px 16px;
-  margin-bottom:8px;
-  flex-shrink:0;
-  display:flex;
-  align-items:center;
-  gap:20px;
-}
-.es-before,.es-after{flex:1;}
-.es-label{font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px;}
-.es-label-before{color:var(--rose);}
-.es-label-after{color:var(--green);}
-.es-text{font-size:12px;color:var(--text-dim);line-height:1.4;}
-.es-text strong{color:var(--text);font-weight:700;}
-.es-arrow{font-size:20px;color:rgba(56,189,248,0.3);flex-shrink:0;}
+.stream-tabs{display:inline-flex;background:#f1f5f9;border-radius:8px;padding:3px;gap:2px;margin-bottom:12px;}
+.stream-tab{font-family:'Inter',sans-serif;font-size:11.5px;font-weight:700;padding:6px 14px;border-radius:6px;border:none;background:transparent;color:var(--dim);cursor:pointer;transition:.15s;display:flex;align-items:center;gap:6px;}
+.stream-tab.on{background:var(--paper);color:var(--accent);box-shadow:0 1px 4px rgba(15,23,42,.08);}
+.stream-tab .si{font-size:13px;}
 
-/* SECTION LABELS */
-.section-label{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:5px;}
+.email{background:#f8fafc;border:1px solid var(--line);border-radius:11px;overflow:hidden;}
+.email-bar{background:var(--paper);border-bottom:1px solid var(--line);padding:10px 14px;display:flex;align-items:center;gap:7px;}
+.wd{width:10px;height:10px;border-radius:50%;}
+.wd.r{background:#f87171;}.wd.y{background:#fbbf24;}.wd.g{background:#34d399;}
+.email-meta{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--faint);margin-left:8px;}
+.email-body{padding:16px 18px;font-size:13px;line-height:1.65;color:var(--ink-2);min-height:168px;white-space:pre-wrap;}
+.email-body .cursor{display:inline-block;width:7px;height:15px;background:var(--accent);vertical-align:text-bottom;animation:blink 1s steps(2) infinite;}
+@keyframes blink{0%,50%{opacity:1;}51%,100%{opacity:0;}}
+.email-body b{color:var(--ink);font-weight:700;}
+.email-body .flag{color:var(--green);font-weight:700;}
+.email-body .warn{color:#d97706;font-weight:700;}
+.email-body .sign{color:var(--faint);font-style:italic;}
+.email-empty{color:var(--faint);}
+.cta{margin-top:14px;border:1px dashed var(--accent);background:var(--accent-tint);border-radius:11px;padding:14px 18px;display:none;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;}
+.cta.show{display:flex;animation:fade .4s;}
+.cta .ct{font-size:13.5px;font-weight:700;color:var(--ink);}
+.cta .cs{font-size:12px;color:var(--dim);margin-top:2px;}
+.cta a.cb{font-size:13px;font-weight:700;color:#fff;background:var(--accent);padding:9px 18px;border-radius:8px;white-space:nowrap;}
+.cta a.cb:hover{background:#0369a1;text-decoration:none;}
 
-/* BODY: two columns */
-.exec-body{display:grid;grid-template-columns:1fr 1fr;gap:10px;flex:1;min-height:0;}
+/* before/after */
+.ba{display:grid;grid-template-columns:1fr auto 1fr;gap:18px;align-items:center;margin-bottom:30px;}
+.ba-card{border-radius:13px;padding:18px 20px;border:1px solid var(--line);}
+.ba-card.before{background:var(--rose-tint);border-color:#fecdd3;}
+.ba-card.after{background:var(--green-tint);border-color:#bbf7d0;}
+.ba-label{font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:7px;}
+.before .ba-label{color:var(--rose);}.after .ba-label{color:var(--green);}
+.ba-text{font-size:13px;color:var(--ink-2);line-height:1.5;}
+.ba-text strong{color:var(--ink);font-weight:700;}
+.ba-arrow{font-size:22px;color:var(--accent);}
 
-/* LEFT: Pipeline 3×3 */
-.exec-left{display:flex;flex-direction:column;min-height:0;}
-.pipe-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;flex:1;}
-.stage{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:9px;
-  padding:10px 8px 8px;
-  text-align:center;
-  transition:border-color .2s;
-  position:relative;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-}
-.stage:hover{border-color:var(--border-hover);}
-.stg-icon{font-size:18px;margin-bottom:3px;}
-.stg-label{font-size:9px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:2px;}
-.stg-title{font-size:12px;font-weight:800;color:var(--white);line-height:1.2;margin-bottom:2px;}
-.stg-desc{font-size:10px;color:var(--text-dim);line-height:1.3;}
-.stg-num{position:absolute;top:5px;right:7px;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;color:rgba(255,255,255,0.12);}
+/* pipeline */
+.pipeg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:32px;}
+.stage{background:var(--paper);border:1px solid var(--line);border-radius:13px;padding:16px 16px 15px;position:relative;border-left:3px solid var(--c,#cbd5e1);transition:transform .15s,box-shadow .15s;}
+.stage:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(15,23,42,.07);}
+.stage .sn{position:absolute;top:13px;right:15px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:var(--faint);}
+.stage .si{font-size:20px;margin-bottom:7px;display:block;}
+.stage .sl{font-size:9px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--c,#64748b);margin-bottom:4px;}
+.stage .st{font-size:14px;font-weight:700;line-height:1.2;margin-bottom:4px;}
+.stage .sd{font-size:11.5px;color:var(--dim);line-height:1.4;}
+.c-gray{--c:#94a3b8;}.c-accent{--c:var(--accent-bright);}.c-green{--c:var(--green);}.c-amber{--c:#d97706;}.c-violet{--c:var(--violet);}
 
-.s-gray .stg-label{color:var(--text-muted);} .s-gray{border-left:2px solid rgba(148,163,184,0.25);}
-.s-blue .stg-label{color:var(--sky);} .s-blue{border-left:2px solid rgba(14,165,233,0.35);}
-.s-green .stg-label{color:var(--green);} .s-green{border-left:2px solid rgba(16,185,129,0.35);}
-.s-amber .stg-label{color:var(--amber);} .s-amber{border-left:2px solid rgba(245,158,11,0.35);}
-.s-violet .stg-label{color:var(--violet);} .s-violet{border-left:2px solid rgba(139,92,246,0.35);}
+/* impact */
+.impact{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.imp{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px;position:relative;overflow:hidden;}
+.imp::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;}
+.imp.i1::before{background:linear-gradient(90deg,var(--accent),transparent);}
+.imp.i2::before{background:linear-gradient(90deg,var(--green),transparent);}
+.imp.i3::before{background:linear-gradient(90deg,var(--amber),transparent);}
+.imp-head{display:flex;align-items:center;gap:11px;margin-bottom:14px;}
+.imp-ico{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.imp.i1 .imp-ico{background:var(--accent-tint);}.imp.i2 .imp-ico{background:var(--green-tint);}.imp.i3 .imp-ico{background:var(--amber-tint);}
+.imp-title{font-size:15px;font-weight:800;}
+.imp-tag{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-top:1px;}
+.imp.i1 .imp-tag{color:var(--accent);}.imp.i2 .imp-tag{color:var(--green);}.imp.i3 .imp-tag{color:var(--amber);}
+.imp ul{list-style:none;}
+.imp li{font-size:12.5px;color:var(--ink-2);padding:6px 0;display:flex;gap:9px;align-items:flex-start;line-height:1.45;border-top:1px solid var(--line-soft);}
+.imp li:first-child{border-top:none;}
+.imp li .ck{color:var(--green);font-weight:700;flex-shrink:0;}
+.imp li strong{color:var(--ink);font-weight:700;}
 
-/* RIGHT: Stakeholder Impact */
-.exec-right{display:flex;flex-direction:column;min-height:0;}
-.impact-stack{display:flex;flex-direction:column;gap:5px;flex:1;}
-
-.impact-card{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:9px;
-  padding:12px 14px;
-  flex:1;
-  position:relative;
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-}
-.impact-card::before{content:"";position:absolute;top:0;left:0;width:100%;height:2px;}
-.impact-card.ic-csuite::before{background:linear-gradient(90deg,var(--sky),transparent);}
-.impact-card.ic-ops::before{background:linear-gradient(90deg,var(--green),transparent);}
-.impact-card.ic-org::before{background:linear-gradient(90deg,var(--amber),transparent);}
-
-.ic-header{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
-.ic-icon{font-size:16px;}
-.ic-title{font-size:14px;font-weight:800;color:var(--white);}
-.ic-subtitle{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
-.ic-csuite .ic-subtitle{color:var(--sky);}
-.ic-ops .ic-subtitle{color:var(--green);}
-.ic-org .ic-subtitle{color:var(--amber);}
-
-.ic-items{list-style:none;}
-.ic-items li{
-  font-size:12px;
-  color:var(--text-dim);
-  padding:2px 0;
-  display:flex;
-  align-items:flex-start;
-  gap:6px;
-  line-height:1.4;
-}
-.ic-items li strong{color:var(--white);font-weight:700;}
-.ic-check{color:var(--green);font-size:12px;flex-shrink:0;margin-top:1px;}
-.ic-before-tag{color:var(--rose);font-weight:700;font-size:11px;}
-.ic-after-tag{color:var(--green);font-weight:700;font-size:11px;}
+/* TECH */
+.d-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.full{grid-column:1/-1;}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px 20px;}
+.card-head{display:flex;align-items:center;gap:11px;margin-bottom:13px;}
+.card-ico{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;background:var(--accent-tint);}
+.card.k-gray .card-ico{background:#f1f5f9;}.card.k-green .card-ico{background:var(--green-tint);}.card.k-rose .card-ico{background:var(--rose-tint);}.card.k-amber .card-ico{background:var(--amber-tint);}.card.k-violet .card-ico{background:var(--violet-tint);}
+.card-title{font-size:14px;font-weight:800;}
+.card-sub{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--dim);margin-top:1px;}
+.rows{list-style:none;}
+.rows li{font-size:12.5px;color:var(--ink-2);padding:7px 0;border-top:1px solid var(--line-soft);display:flex;gap:10px;align-items:flex-start;line-height:1.45;}
+.rows li:first-child{border-top:none;}
+.key{font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;color:var(--accent);background:var(--accent-tint);padding:2px 7px;border-radius:5px;min-width:78px;text-align:center;flex-shrink:0;}
+.card.k-rose .key{color:var(--rose);background:var(--rose-tint);}.card.k-amber .key{color:var(--amber);background:var(--amber-tint);}.card.k-violet .key{color:var(--violet);background:var(--violet-tint);}.card.k-green .key{color:var(--green);background:var(--green-tint);}.card.k-gray .key{color:var(--dim);background:#f1f5f9;}
+.flow{margin-top:12px;background:#f8fafc;border:1px solid var(--line-soft);border-radius:9px;padding:11px 13px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);line-height:1.9;}
+.flow .hi{color:var(--accent);font-weight:600;}.flow .ro{color:var(--rose);font-weight:600;}.flow .gr{color:var(--green);font-weight:600;}.flow .am{color:var(--amber);font-weight:600;}.flow .ar{color:var(--faint);}
+.gaps{background:var(--amber-tint);border:1px solid #fde68a;border-radius:14px;padding:18px 20px;}
+.gap-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 22px;margin-top:4px;}
+.gap-item{font-size:12px;color:var(--ink-2);padding:7px 0;border-top:1px solid #fde68a;display:flex;gap:9px;align-items:flex-start;line-height:1.4;}
+.gap-num{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--amber);flex-shrink:0;}
+.stack-wrap{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px;}
+.chip{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;padding:5px 11px;border-radius:7px;border:1px solid var(--line);background:var(--paper);color:var(--ink-2);}
+.chip.prod{background:var(--accent-tint);color:var(--accent);border-color:#bae6fd;font-weight:600;}
+.chip.eval{background:#f8fafc;color:var(--faint);}
 
 /* FOOTER */
-.ftr{
-  padding-top:6px;
-  border-top:1px solid var(--border);
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  font-size:9px;
-  font-weight:700;
-  color:var(--text-muted);
-  letter-spacing:1px;
-  text-transform:uppercase;
-  flex-shrink:0;
-}
+.foot{margin-top:30px;padding-top:18px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--faint);flex-wrap:wrap;gap:8px;}
+.foot .conf{color:var(--accent);font-weight:600;letter-spacing:1px;text-transform:uppercase;font-size:10px;}
 
-/* ═══════════════════════════════════════ */
-/*  DETAIL VIEW                           */
-/* ═══════════════════════════════════════ */
-.detail-scroll{flex:1;overflow-y:auto;padding-right:4px;}
-.detail-scroll::-webkit-scrollbar{width:4px;}
-.detail-scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:4px;}
-
-.d-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-@media(max-width:960px){.d-grid{grid-template-columns:1fr;}}
-.full{grid-column:1/-1;}
-
-.d-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;position:relative;overflow:hidden;}
-.d-card::before{content:"";position:absolute;top:0;left:0;width:100%;height:3px;}
-.d-card.t-gray::before{background:linear-gradient(90deg,#94a3b8,transparent);}
-.d-card.t-blue::before{background:linear-gradient(90deg,var(--sky),transparent);}
-.d-card.t-green::before{background:linear-gradient(90deg,var(--green),transparent);}
-.d-card.t-rose::before{background:linear-gradient(90deg,var(--rose),transparent);}
-.d-card.t-amber::before{background:linear-gradient(90deg,var(--amber),transparent);}
-.d-card.t-violet::before{background:linear-gradient(90deg,var(--violet),transparent);}
-
-.d-hdr{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
-.d-ico{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
-.t-gray .d-ico{background:rgba(148,163,184,0.1);}
-.t-blue .d-ico{background:var(--sky-dim);}
-.t-green .d-ico{background:var(--green-dim);}
-.t-rose .d-ico{background:var(--rose-dim);}
-.t-amber .d-ico{background:var(--amber-dim);}
-.t-violet .d-ico{background:var(--violet-dim);}
-
-.d-ttl{font-size:13px;font-weight:800;color:var(--white);}
-.d-sub{font-size:9px;font-weight:700;color:var(--text-dim);letter-spacing:1px;text-transform:uppercase;}
-
-.d-list{list-style:none;}
-.d-list li{font-size:12px;color:var(--text-dim);padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.03);display:flex;align-items:flex-start;gap:6px;line-height:1.4;}
-.d-list li:last-child{border-bottom:none;}
-.k{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--text);min-width:70px;flex-shrink:0;}
-
-.d-flow{margin-top:8px;background:rgba(0,0,0,0.35);border-radius:6px;padding:7px 10px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-muted);line-height:1.8;}
-.d-flow .hi{color:var(--sky);font-weight:600;}
-.d-flow .ar{color:var(--text-muted);}
-.d-flow .rose{color:var(--rose);font-weight:600;}
-.d-flow .grn{color:var(--green);font-weight:600;}
-.d-flow .amb{color:var(--amber);font-weight:600;}
-
-.gaps-card{background:rgba(245,158,11,0.04);border:1px dashed rgba(245,158,11,0.25);border-radius:12px;padding:16px;}
-.gap-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px 16px;}
-@media(max-width:700px){.gap-grid{grid-template-columns:1fr;}}
-.gap-item{font-size:11px;color:var(--text-dim);padding:4px 0;border-bottom:1px solid rgba(245,158,11,0.08);display:flex;align-items:flex-start;gap:5px;}
-.gap-num{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:var(--amber);min-width:14px;}
-
-.stack{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;}
-.sp{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;padding:3px 8px;border-radius:4px;white-space:nowrap;}
-
-/* RESPONSIVE */
-@media(max-width:960px){
-  body{overflow:auto;}
-  .page{height:auto;min-height:100vh;}
-  .exec-body{grid-template-columns:1fr;}
-  .metrics-strip{grid-template-columns:repeat(4,1fr);}
-  .hdr{flex-direction:column;align-items:flex-start;}
-  .hdr-contact{text-align:left;}
+@media(max-width:920px){
+  .metrics{grid-template-columns:1fr;}
+  .hero-metric{padding:20px;}.hero-metric .v{font-size:52px;}
+  .pipeg,.impact,.d-grid{grid-template-columns:1fr 1fr;}
+  h1{font-size:28px;}
+  .ba{grid-template-columns:1fr;}.ba-arrow{transform:rotate(90deg);justify-self:center;}
 }
 @media(max-width:600px){
-  .pipe-grid{grid-template-columns:1fr 1fr;}
-  .metrics-strip{grid-template-columns:1fr 1fr;}
+  .grid6{grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(3,1fr);}
+  .pipeg,.impact,.d-grid,.gap-grid{grid-template-columns:1fr;}
+  .contact{text-align:left;}.tab{padding:8px 14px;}
 }
 </style>
 </head>
 <body>
 <div class="page">
 
-  <!-- HEADER -->
-  <div class="hdr">
-    <div class="hdr-left">
-      <h1>Executive Reporting <em>AI Agent</em></h1>
-      <div class="badges">
-        <span class="badge b-prod">In Production</span>
-        <span class="badge b-sched">Runs Every Weekday</span>
-        <span class="badge b-hipaa">HIPAA Compliant · PHI Protected</span>
-        <span class="badge b-cost">~$1/day Operating Cost</span>
+  <header class="hero">
+    <div class="hero-top">
+      <div>
+        <div class="kicker">Production AI System · Case Study</div>
+        <h1>Executive Reporting AI Agent</h1>
+        <p class="subhead">An autonomous agent that ingests healthcare data, detects anomalies, and delivers tailored briefings to leadership before 7 AM. Every weekday. Unattended.</p>
+      </div>
+      <div class="contact">
+        <div class="label">Built by</div>
+        Alex Ovchinnikov<br>
+        <span class="label">Roles</span> <a href="https://linkedin.com/in/OvchinnikovAlex" target="_blank">LinkedIn →</a><br>
+        <span class="label">Consulting</span> <a href="https://solution4you.pro" target="_blank">solution4you.pro →</a>
       </div>
     </div>
-    <div class="hdr-contact">
-      <a href="https://linkedin.com/in/OvchinnikovAlex" target="_blank">linkedin.com/in/OvchinnikovAlex</a> · <a href="mailto:hello@solution4you.pro">hello@solution4you.pro </a>
+    <div class="badges">
+      <span class="badge live"><span class="dot"></span>In Production</span>
+      <span class="badge">Runs Every Weekday</span>
+      <span class="badge">HIPAA Compliant · PHI Protected</span>
+      <span class="badge">~$1/day Operating Cost</span>
     </div>
-  </div>
-  <div class="divider"></div>
+  </header>
 
-  <!-- TABS -->
-  <div class="tabs">
-    <button class="tab on" onclick="sw('exec')">Executive Overview</button>
-    <button class="tab" onclick="sw('detail')">Technical Breakdown</button>
-  </div>
-
-  <!-- ═══════════════════════════════════════════ -->
-  <!--  PANEL 1: EXECUTIVE OVERVIEW               -->
-  <!-- ═══════════════════════════════════════════ -->
-  <div id="p-exec" class="panel on">
-
-    <!-- KEY RESULTS — top, inverted pyramid -->
-    <div class="metrics-strip">
-      <div class="m-card"><div class="m-val" style="color:var(--green);">70%</div><div class="m-lbl">Manual Overhead Eliminated</div></div>
-      <div class="m-card"><div class="m-val" style="color:var(--rose);">~2 FTE</div><div class="m-lbl">Analyst Time Recaptured Daily</div></div>
-      <div class="m-card"><div class="m-val" style="color:var(--sky);">40%→≤5%</div><div class="m-lbl">AI Error Rate Reduced</div></div>
-      <div class="m-card"><div class="m-val" style="color:var(--green);">~$1/day</div><div class="m-lbl">Total Operating Cost</div></div>
-      <div class="m-card"><div class="m-val" style="color:var(--violet);">5 Seats</div><div class="m-lbl">Power BI Licenses Freed</div></div>
-      <div class="m-card"><div class="m-val" style="color:var(--violet);">By 7 AM</div><div class="m-lbl">Daily Insights Delivered</div></div>
-      <div class="m-card"><div class="m-val" style="color:var(--amber);">100%</div><div class="m-lbl">Autonomous · Zero Manual Touch</div></div>
+  <nav class="tabs">
+    <div class="tab-group">
+      <button class="tab on" onclick="sw('exec',this)">Executive Overview<span class="t-aud">For leadership & buyers</span></button>
+      <button class="tab" onclick="sw('detail',this)">Technical Breakdown<span class="t-aud">For engineers & technical screens</span></button>
     </div>
+    <span class="tab-hint">Same system, two lenses. Pick yours.</span>
+  </nav>
 
-    <!-- EXECUTIVE SUMMARY — Before vs After -->
-    <div class="exec-summary">
-      <div class="es-before">
-        <div class="es-label es-label-before">Before</div>
-        <div class="es-text"><strong>Manual Power BI dashboard</strong> requiring analyst prep, technical navigation, and daily data refreshes. No early warning system — KPI breaches surfaced in meetings, not before.</div>
-      </div>
-      <div class="es-arrow">▸</div>
-      <div class="es-after">
-        <div class="es-label es-label-after">After</div>
-        <div class="es-text"><strong>Fully autonomous push-model.</strong> AI agent ingests data, detects anomalies, and delivers tailored reports to executives and ops leaders before 7 AM — every weekday, unattended.</div>
+  <!-- EXEC -->
+  <section id="p-exec" class="panel on">
+    <h2 class="exec-headline">The morning report <em>writes itself</em> before anyone logs in.</h2>
+    <p class="exec-sub">No dashboard to open. No analyst to prep it. The numbers that matter, the anomalies worth knowing, and the actions to take, delivered to the right inbox at the right altitude.</p>
+
+    <!-- combo metrics -->
+    <div class="metrics" id="metrics">
+      <div class="hero-metric"><div class="v num" data-to="70" data-suffix="%">0%</div><div class="l">Manual reporting overhead eliminated</div></div>
+      <div class="grid6">
+        <div class="tile"><div class="v num">~2<small> FTE</small></div><div class="l">Analyst Time Recaptured</div></div>
+        <div class="tile"><div class="v num">40→5<small>%</small></div><div class="l">AI Error Rate Reduced</div></div>
+        <div class="tile g"><div class="v num" data-prefix="~$" data-to="1" data-suffix="/day">~$0/day</div><div class="l">Total Operating Cost</div></div>
+        <div class="tile"><div class="v num" data-to="5">0</div><div class="l">Power BI Seats Freed</div></div>
+        <div class="tile"><div class="v num">7<small> AM</small></div><div class="l">Insights Delivered Daily</div></div>
+        <div class="tile"><div class="v num" data-to="100" data-suffix="%">0%</div><div class="l">Autonomous · Zero Touch</div></div>
       </div>
     </div>
 
-    <!-- BODY: Pipeline left, Impact right -->
-    <div class="exec-body">
-
-      <!-- LEFT: The Engine -->
-      <div class="exec-left">
-        <div class="section-label">The Engine (Architecture)</div>
-        <div class="pipe-grid">
-          <div class="stage s-gray">
-            <span class="stg-num">1</span>
-            <div class="stg-icon">🏥</div>
-            <div class="stg-label">Source</div>
-            <div class="stg-title">Client Systems</div>
-            <div class="stg-desc">Healthcare transactional data</div>
-          </div>
-          <div class="stage s-gray">
-            <span class="stg-num">2</span>
-            <div class="stg-icon">🗄️</div>
-            <div class="stg-label">Infrastructure</div>
-            <div class="stg-title">AWS Databases</div>
-            <div class="stg-desc">Production + staging pipeline</div>
-          </div>
-          <div class="stage s-gray">
-            <span class="stg-num">3</span>
-            <div class="stg-icon">⚙️</div>
-            <div class="stg-label">Data Engineering</div>
-            <div class="stg-title">Trim · Obfuscate · Aggregate</div>
-            <div class="stg-desc">Python ETL with completeness checks</div>
-          </div>
-          <div class="stage s-amber">
-            <span class="stg-num">4</span>
-            <div class="stg-icon">📂</div>
-            <div class="stg-label">Central Hub</div>
-            <div class="stg-title">SharePoint</div>
-            <div class="stg-desc">Daily files + KPI baseline targets</div>
-          </div>
-          <div class="stage s-blue">
-            <span class="stg-num">5</span>
-            <div class="stg-icon">🔗</div>
-            <div class="stg-label">Orchestration</div>
-            <div class="stg-title">AI Agent Platform</div>
-            <div class="stg-desc">Polls, validates, reads 7-day window</div>
-          </div>
-          <div class="stage s-blue">
-            <span class="stg-num">6</span>
-            <div class="stg-icon">🧠</div>
-            <div class="stg-label">Intelligence</div>
-            <div class="stg-title">LLM Analysis</div>
-            <div class="stg-desc">Won eval vs 8 models on quality + cost</div>
-          </div>
-          <div class="stage s-violet">
-            <span class="stg-num">7</span>
-            <div class="stg-icon">🛡️</div>
-            <div class="stg-label">Validation</div>
-            <div class="stg-title">Grounding Layer</div>
-            <div class="stg-desc">Baseline anchoring + field-level checks</div>
-          </div>
-          <div class="stage s-green">
-            <span class="stg-num">8</span>
-            <div class="stg-icon">📧</div>
-            <div class="stg-label">Output</div>
-            <div class="stg-title">2 Email Streams</div>
-            <div class="stg-desc">Exec summary + Ops action alerts</div>
-          </div>
-          <div class="stage s-green">
-            <span class="stg-num">9</span>
-            <div class="stg-icon">👥</div>
-            <div class="stg-label">Delivery</div>
-            <div class="stg-title">Stakeholders</div>
-            <div class="stg-desc">C-Suite + Ops leads, before 7 AM</div>
-          </div>
-        </div>
+    <!-- demo -->
+    <div class="eyebrow">See it work · live demo</div>
+    <div class="demo">
+      <div class="demo-head">
+        <div class="demo-title">Watch the agent <span>produce a morning briefing</span><span class="ds">Each run reflects a different day. Two streams: one for execs, one for ops.</span></div>
+        <button class="run" id="runBtn" onclick="runDemo()"><span class="pulse"></span> Watch it run</button>
       </div>
-
-      <!-- RIGHT: Business Impact & ROI -->
-      <div class="exec-right">
-        <div class="section-label">Business Impact & ROI</div>
-        <div class="impact-stack">
-
-          <div class="impact-card ic-csuite">
-            <div class="ic-header">
-              <div class="ic-icon">👔</div>
-              <div>
-                <div class="ic-title">C-Suite Executives</div>
-                <div class="ic-subtitle">Strategic Awareness</div>
-              </div>
-            </div>
-            <ul class="ic-items">
-              <li><span class="ic-check">✓</span> <strong>Daily strategic summary in inbox by 7 AM</strong> — no dashboard login required</li>
-              <li><span class="ic-check">✓</span> <strong>Anomalies surfaced automatically</strong> — not manually hunted</li>
-              <li><span class="ic-check">✓</span> <strong>Decisions informed before the workday</strong> — consistent, trusted cadence</li>
-            </ul>
-          </div>
-
-          <div class="impact-card ic-ops">
-            <div class="ic-header">
-              <div class="ic-icon">📋</div>
-              <div>
-                <div class="ic-title">Ops Leaders</div>
-                <div class="ic-subtitle">Proactive Response</div>
-              </div>
-            </div>
-            <ul class="ic-items">
-              <li><span class="ic-check">✓</span> <strong>Targeted alerts only on threshold breaches</strong> — zero noise</li>
-              <li><span class="ic-check">✓</span> <strong>Prep time before exec meetings</strong> — not scrambling during</li>
-              <li><span class="ic-check">✓</span> <strong>Clear accountability</strong> — each alert points to a specific area</li>
-            </ul>
-          </div>
-
-          <div class="impact-card ic-org">
-            <div class="ic-header">
-              <div class="ic-icon">🏢</div>
-              <div>
-                <div class="ic-title">Organization-Wide</div>
-                <div class="ic-subtitle">Operational ROI</div>
-              </div>
-            </div>
-            <ul class="ic-items">
-              <li><span class="ic-check">✓</span> <strong>70% manual reporting overhead eliminated</strong> — analysts do higher-value work</li>
-              <li><span class="ic-check">✓</span> <strong>~$1/day fully loaded cost</strong> — replaces hours of daily analyst time</li>
-              <li><span class="ic-check">✓</span> <strong>Power BI dependency removed</strong> for daily executive decision-making</li>
-            </ul>
-          </div>
-
-        </div>
+      <div class="pipe" id="pipe">
+        <div class="pchip"><div class="pn">01</div><div class="pt">Poll</div></div>
+        <div class="pchip"><div class="pn">02</div><div class="pt">Validate</div></div>
+        <div class="pchip"><div class="pn">03</div><div class="pt">Read 7d</div></div>
+        <div class="pchip"><div class="pn">04</div><div class="pt">Analyze</div></div>
+        <div class="pchip"><div class="pn">05</div><div class="pt">Ground</div></div>
+        <div class="pchip"><div class="pn">06</div><div class="pt">Deliver</div></div>
       </div>
-
+      <div class="stream-tabs">
+        <button class="stream-tab on" id="st-exec" onclick="setStream('exec')"><span class="si">👔</span>Exec Summary</button>
+        <button class="stream-tab" id="st-ops" onclick="setStream('ops')"><span class="si">📋</span>Ops Alert</button>
+      </div>
+      <div class="email">
+        <div class="email-bar"><span class="wd r"></span><span class="wd y"></span><span class="wd g"></span><span class="email-meta" id="emeta">To: C-Suite · Daily Executive Summary</span></div>
+        <div class="email-body" id="out"><span class="email-empty">Press “Watch it run” to generate today’s briefing.</span></div>
+      </div>
+      <div class="cta" id="cta">
+        <div><div class="ct">Want a briefing engine like this for your team?</div><div class="cs">Built and deployed by Alex Ovchinnikov. Production agents, not prototypes. <a id="ctaEmail" href="#" style="color:var(--accent);font-weight:600;"></a></div></div>
+        <a class="cb" href="https://solution4you.pro" target="_blank">Visit solution4you.pro →</a>
+      </div>
     </div>
-  </div>
 
-  <!-- ═══════════════════════════════════════════ -->
-  <!--  PANEL 2: TECHNICAL BREAKDOWN               -->
-  <!-- ═══════════════════════════════════════════ -->
-  <div id="p-detail" class="panel">
-    <div class="detail-scroll">
+    <!-- before/after -->
+    <div class="ba">
+      <div class="ba-card before"><div class="ba-label">Before</div><div class="ba-text"><strong>Manual Power BI dashboard.</strong> Analyst prep, technical navigation, daily refreshes. KPI breaches surfaced in meetings, not before them.</div></div>
+      <div class="ba-arrow">→</div>
+      <div class="ba-card after"><div class="ba-label">After</div><div class="ba-text"><strong>Fully autonomous push-model.</strong> The agent ingests, detects, and delivers to execs and ops leaders before 7 AM. Unattended, every weekday.</div></div>
+    </div>
+
+    <!-- pipeline -->
+    <div class="eyebrow">How it works · the engine</div>
+    <div class="pipeg">
+      <div class="stage c-gray"><span class="sn">01</span><span class="si">🏥</span><div class="sl">Source</div><div class="st">Client Systems</div><div class="sd">Healthcare transactional data</div></div>
+      <div class="stage c-gray"><span class="sn">02</span><span class="si">🗄️</span><div class="sl">Infrastructure</div><div class="st">AWS Databases</div><div class="sd">Production + staging pipeline</div></div>
+      <div class="stage c-gray"><span class="sn">03</span><span class="si">⚙️</span><div class="sl">Data Engineering</div><div class="st">Trim · Obfuscate · Aggregate</div><div class="sd">Python ETL with completeness checks</div></div>
+      <div class="stage c-amber"><span class="sn">04</span><span class="si">📂</span><div class="sl">Central Hub</div><div class="st">SharePoint</div><div class="sd">Daily files + KPI baseline targets</div></div>
+      <div class="stage c-accent"><span class="sn">05</span><span class="si">🔗</span><div class="sl">Orchestration</div><div class="st">AI Agent Platform</div><div class="sd">Polls, validates, reads 7-day window</div></div>
+      <div class="stage c-accent"><span class="sn">06</span><span class="si">🧠</span><div class="sl">Intelligence</div><div class="st">LLM Analysis</div><div class="sd">Won eval vs 8 models on quality + cost</div></div>
+      <div class="stage c-violet"><span class="sn">07</span><span class="si">🛡️</span><div class="sl">Validation</div><div class="st">Grounding Layer</div><div class="sd">Baseline anchoring + field-level checks</div></div>
+      <div class="stage c-green"><span class="sn">08</span><span class="si">📧</span><div class="sl">Output</div><div class="st">2 Email Streams</div><div class="sd">Exec summary + ops action alerts</div></div>
+      <div class="stage c-green"><span class="sn">09</span><span class="si">👥</span><div class="sl">Delivery</div><div class="st">Stakeholders</div><div class="sd">C-suite + ops leads, before 7 AM</div></div>
+    </div>
+
+    <!-- impact -->
+    <div class="eyebrow">Who it serves · business impact</div>
+    <div class="impact">
+      <div class="imp i1"><div class="imp-head"><div class="imp-ico">👔</div><div><div class="imp-title">C-Suite</div><div class="imp-tag">Strategic Awareness</div></div></div>
+        <ul>
+          <li><span class="ck">✓</span><span><strong>Daily summary in inbox by 7 AM</strong> — no dashboard login required</span></li>
+          <li><span class="ck">✓</span><span><strong>Anomalies surfaced automatically</strong> — not manually hunted</span></li>
+          <li><span class="ck">✓</span><span><strong>Decisions informed before the workday</strong> — trusted cadence</span></li>
+        </ul>
+      </div>
+      <div class="imp i2"><div class="imp-head"><div class="imp-ico">📋</div><div><div class="imp-title">Ops Leaders</div><div class="imp-tag">Proactive Response</div></div></div>
+        <ul>
+          <li><span class="ck">✓</span><span><strong>Alerts only on threshold breaches</strong> — zero noise</span></li>
+          <li><span class="ck">✓</span><span><strong>Prep before exec meetings</strong> — not scrambling during</span></li>
+          <li><span class="ck">✓</span><span><strong>Clear accountability</strong> — each alert points to an area</span></li>
+        </ul>
+      </div>
+      <div class="imp i3"><div class="imp-head"><div class="imp-ico">🏢</div><div><div class="imp-title">Organization</div><div class="imp-tag">Operational ROI</div></div></div>
+        <ul>
+          <li><span class="ck">✓</span><span><strong>70% manual overhead eliminated</strong> — analysts do higher-value work</span></li>
+          <li><span class="ck">✓</span><span><strong>~$1/day fully loaded</strong> — replaces hours of analyst time</span></li>
+          <li><span class="ck">✓</span><span><strong>Power BI dependency removed</strong> for daily exec decisions</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- TECH -->
+  <section id="p-detail" class="panel">
     <div class="d-grid">
-
-      <div class="d-card t-gray">
-        <div class="d-hdr"><div class="d-ico">🏥</div><div><div class="d-ttl">Source Systems & AWS</div><div class="d-sub">Pre-existing Infrastructure</div></div></div>
-        <ul class="d-list">
-          <li><span class="k">Sources</span> Healthcare client transactional systems</li>
-          <li><span class="k">Prod DB</span> AWS-hosted production database</li>
-          <li><span class="k">Staging</span> AWS staging for analytical workloads</li>
-          <li><span class="k">Ownership</span> Maintained by existing teams</li>
-        </ul>
+      <div class="card k-gray"><div class="card-head"><div class="card-ico">🏥</div><div><div class="card-title">Source Systems & AWS</div><div class="card-sub">Pre-existing Infrastructure</div></div></div>
+        <ul class="rows"><li><span class="key">Sources</span> Healthcare client transactional systems</li><li><span class="key">Prod DB</span> AWS-hosted production database</li><li><span class="key">Staging</span> AWS staging for analytical workloads</li><li><span class="key">Ownership</span> Maintained by existing teams</li></ul>
       </div>
-
-      <div class="d-card t-gray">
-        <div class="d-hdr"><div class="d-ico">⚙️</div><div><div class="d-ttl">Data Engineering Pipeline</div><div class="d-sub">ETL + File Generation</div></div></div>
-        <ul class="d-list">
-          <li><span class="k">Tech</span> Python + cron on AWS Lambda/EC2</li>
-          <li><span class="k">Process</span> Trim → Obfuscate → Aggregate</li>
-          <li><span class="k">Validation</span> Completeness checks before file gen</li>
-          <li><span class="k">Output</span> Dated daily Excel (.xlsx) to SharePoint</li>
-        </ul>
-        <div class="d-flow"><span class="hi">Staging</span> <span class="ar">→</span> <span class="rose">Trim</span> <span class="ar">→</span> <span class="rose">Obfuscate</span> <span class="ar">→</span> <span class="rose">Aggregate</span> <span class="ar">→</span> <span class="amb">SharePoint</span></div>
+      <div class="card k-gray"><div class="card-head"><div class="card-ico">⚙️</div><div><div class="card-title">Data Engineering Pipeline</div><div class="card-sub">ETL + File Generation</div></div></div>
+        <ul class="rows"><li><span class="key">Tech</span> Python + cron on AWS Lambda/EC2</li><li><span class="key">Process</span> Trim → Obfuscate → Aggregate</li><li><span class="key">Validation</span> Completeness checks before file gen</li><li><span class="key">Output</span> Dated daily Excel (.xlsx) to SharePoint</li></ul>
+        <div class="flow"><span class="hi">Staging</span> <span class="ar">→</span> <span class="ro">Trim</span> <span class="ar">→</span> <span class="ro">Obfuscate</span> <span class="ar">→</span> <span class="ro">Aggregate</span> <span class="ar">→</span> <span class="am">SharePoint</span></div>
       </div>
-
-      <div class="d-card t-amber">
-        <div class="d-hdr"><div class="d-ico">📂</div><div><div class="d-ttl">SharePoint — Central Hub</div><div class="d-sub">File Storage & Baselines</div></div></div>
-        <ul class="d-list">
-          <li><span class="k">Daily Files</span> Dated Excel files, accumulating</li>
-          <li><span class="k">Baselines</span> Persistent KPI targets, set with ops leaders</li>
-          <li><span class="k">Review</span> Quarterly cadence for baseline updates</li>
-          <li><span class="k">History</span> Agent reads current + 6 prior days</li>
-        </ul>
+      <div class="card k-amber"><div class="card-head"><div class="card-ico">📂</div><div><div class="card-title">SharePoint — Central Hub</div><div class="card-sub">File Storage & Baselines</div></div></div>
+        <ul class="rows"><li><span class="key">Daily Files</span> Dated Excel files, accumulating</li><li><span class="key">Baselines</span> Persistent KPI targets, set with ops leaders</li><li><span class="key">Review</span> Quarterly cadence for baseline updates</li><li><span class="key">History</span> Agent reads current + 6 prior days</li></ul>
       </div>
-
-      <div class="d-card t-blue">
-        <div class="d-hdr"><div class="d-ico">🔗</div><div><div class="d-ttl">AI Orchestration Layer</div><div class="d-sub">Trigger, Validate, Analyze</div></div></div>
-        <ul class="d-list">
-          <li><span class="k">Trigger</span> Polls SharePoint on schedule (pull, weekdays)</li>
-          <li><span class="k">Validate</span> Checks file presence + format</li>
-          <li><span class="k">On Failure</span> Alert email — does not silently skip</li>
-          <li><span class="k">Analysis</span> 7-day rolling window + baseline comparison</li>
-          <li><span class="k">Detection</span> Spikes, dips, and threshold breaches</li>
-        </ul>
-        <div class="d-flow"><span class="amb">SP Poll</span> <span class="ar">→</span> <span class="hi">File Check</span> <span class="ar">→ [fail?] →</span> <span class="rose">Alert</span><br><span class="hi">File Check</span> <span class="ar">→ [pass] →</span> <span class="hi">Read 7 Files</span> <span class="ar">→</span> <span class="hi">Baselines</span> <span class="ar">→</span> <span class="hi">Analyze</span></div>
+      <div class="card"><div class="card-head"><div class="card-ico">🔗</div><div><div class="card-title">AI Orchestration Layer</div><div class="card-sub">Trigger · Validate · Analyze</div></div></div>
+        <ul class="rows"><li><span class="key">Trigger</span> Polls SharePoint on schedule (pull, weekdays)</li><li><span class="key">Validate</span> Checks file presence + format</li><li><span class="key">On Fail</span> Alert email — does not silently skip</li><li><span class="key">Analysis</span> 7-day rolling window + baseline comparison</li><li><span class="key">Detection</span> Spikes, dips, and threshold breaches</li></ul>
+        <div class="flow"><span class="am">SP Poll</span> <span class="ar">→</span> <span class="hi">File Check</span> <span class="ar">→ [fail] →</span> <span class="ro">Alert</span><br><span class="hi">File Check</span> <span class="ar">→ [pass] →</span> <span class="hi">Read 7</span> <span class="ar">→</span> <span class="hi">Baselines</span> <span class="ar">→</span> <span class="hi">Analyze</span></div>
       </div>
-
-      <div class="d-card t-blue">
-        <div class="d-hdr"><div class="d-ico">🧠</div><div><div class="d-ttl">LLM Layer</div><div class="d-sub">Production Model</div></div></div>
-        <ul class="d-list">
-          <li><span class="k">Model</span> GPT Mini — won eval on quality/latency/cost</li>
-          <li><span class="k">Evaluated</span> GPT Mini/Nano, Claude Opus/Sonnet/Haiku, Gemini Flash/Lite</li>
-          <li><span class="k">Prompts</span> Iteratively evolved ("prompt skilling")</li>
-          <li><span class="k">Few-shot</span> What-good-looks-like examples embedded</li>
-          <li><span class="k">Cost</span> $0.50–$2.00 per daily run</li>
-        </ul>
+      <div class="card"><div class="card-head"><div class="card-ico">🧠</div><div><div class="card-title">LLM Layer</div><div class="card-sub">Production Model</div></div></div>
+        <ul class="rows"><li><span class="key">Model</span> GPT Mini — won eval on quality/latency/cost</li><li><span class="key">Evaluated</span> GPT Mini/Nano, Claude Opus/Sonnet/Haiku, Gemini Flash/Lite</li><li><span class="key">Prompts</span> Iteratively evolved ("prompt skilling")</li><li><span class="key">Few-shot</span> What-good-looks-like examples embedded</li><li><span class="key">Cost</span> $0.50–$2.00 per daily run</li></ul>
       </div>
-
-      <div class="d-card t-violet">
-        <div class="d-hdr"><div class="d-ico">🛡️</div><div><div class="d-ttl">Grounding & Validation</div><div class="d-sub">Hallucination Fix: 40% → ≤5%</div></div></div>
-        <ul class="d-list">
-          <li><span class="k">Problem</span> v0 fabricated names, products, flagged wrong anomalies</li>
-          <li><span class="k">Fix #1</span> Baseline file as source of truth for KPI targets</li>
-          <li><span class="k">Fix #2</span> Iterative prompt refinement with few-shot examples</li>
-          <li><span class="k">Fix #3</span> Field-level format validation at each step</li>
-          <li><span class="k">Result</span> ≤5% error ceiling — most runs zero errors</li>
-        </ul>
-        <div class="d-flow"><span class="rose">v0: 40% errors</span> <span class="ar">→</span> <span class="hi">+ Baselines</span> <span class="ar">→</span> <span class="hi">+ Prompt Skilling</span> <span class="ar">→</span> <span class="hi">+ Field Validation</span> <span class="ar">→</span> <span class="grn">≤5% errors</span></div>
+      <div class="card k-violet"><div class="card-head"><div class="card-ico">🛡️</div><div><div class="card-title">Grounding & Validation</div><div class="card-sub">Hallucination Fix: 40% → ≤5%</div></div></div>
+        <ul class="rows"><li><span class="key">Problem</span> v0 fabricated names, products, flagged wrong anomalies</li><li><span class="key">Fix #1</span> Baseline file as source of truth for KPI targets</li><li><span class="key">Fix #2</span> Iterative prompt refinement with few-shot examples</li><li><span class="key">Fix #3</span> Field-level format validation at each step</li><li><span class="key">Result</span> ≤5% error ceiling — most runs zero errors</li></ul>
+        <div class="flow"><span class="ro">v0: 40%</span> <span class="ar">→</span> <span class="hi">+ Baselines</span> <span class="ar">→</span> <span class="hi">+ Prompt Skilling</span> <span class="ar">→</span> <span class="hi">+ Field Validation</span> <span class="ar">→</span> <span class="gr">≤5%</span></div>
       </div>
-
-      <div class="d-card t-green">
-        <div class="d-hdr"><div class="d-ico">📧</div><div><div class="d-ttl">Output & Delivery</div><div class="d-sub">Two Email Streams</div></div></div>
-        <ul class="d-list">
-          <li><span class="k">Email #1</span> Executive Summary — strategic overview with trends</li>
-          <li><span class="k">Email #2</span> Ops Alerts — action-oriented, flags KPIs to investigate</li>
-          <li><span class="k">Timing</span> Early morning, Mon–Fri</li>
-          <li><span class="k">Impact</span> Execs informed before workday; ops leads act proactively</li>
-        </ul>
+      <div class="card k-green"><div class="card-head"><div class="card-ico">📧</div><div><div class="card-title">Output & Delivery</div><div class="card-sub">Two Email Streams</div></div></div>
+        <ul class="rows"><li><span class="key">Email #1</span> Executive Summary — strategic overview with trends</li><li><span class="key">Email #2</span> Ops Alerts — action-oriented, flags KPIs to investigate</li><li><span class="key">Timing</span> Early morning, Mon–Fri</li><li><span class="key">Impact</span> Execs informed before workday; ops act proactively</li></ul>
       </div>
-
-      <div class="d-card t-rose">
-        <div class="d-hdr"><div class="d-ico">⚠️</div><div><div class="d-ttl">Error Handling</div><div class="d-sub">Failure Paths</div></div></div>
-        <ul class="d-list">
-          <li><span class="k">File Missing</span> Alert email → workflow halts</li>
-          <li><span class="k">Malformed</span> Validation fails → alert → halt</li>
-          <li><span class="k">API Down</span> Step error → manual retry</li>
-          <li><span class="k">No Fallback</span> No automatic model-fallback (future v2)</li>
-          <li><span class="k">Quality</span> Incorrect successful output not auto-detected (v2)</li>
-        </ul>
+      <div class="card k-rose"><div class="card-head"><div class="card-ico">⚠️</div><div><div class="card-title">Error Handling</div><div class="card-sub">Failure Paths</div></div></div>
+        <ul class="rows"><li><span class="key">Missing</span> Alert email → workflow halts</li><li><span class="key">Malformed</span> Validation fails → alert → halt</li><li><span class="key">API Down</span> Step error → manual retry</li><li><span class="key">No Fallback</span> No automatic model-fallback (v2)</li><li><span class="key">Quality</span> Incorrect successful output not auto-detected (v2)</li></ul>
       </div>
-
-      <div class="d-card t-amber">
-        <div class="d-hdr"><div class="d-ico">📊</div><div><div class="d-ttl">Logging & Audit Trail</div><div class="d-sub">Split Architecture</div></div></div>
-        <ul class="d-list">
-          <li><span class="k">System A</span> Data Engineering — ETL and completeness logs</li>
-          <li><span class="k">System B</span> Orchestration platform — run/step logs</li>
-          <li><span class="k">Tracked</span> Pass/fail, step breakdown, cost per run</li>
-          <li><span class="k">Gap</span> No unified audit dashboard</li>
-        </ul>
+      <div class="card k-amber"><div class="card-head"><div class="card-ico">📊</div><div><div class="card-title">Logging & Audit Trail</div><div class="card-sub">Split Architecture</div></div></div>
+        <ul class="rows"><li><span class="key">System A</span> Data Engineering — ETL and completeness logs</li><li><span class="key">System B</span> Orchestration platform — run/step logs</li><li><span class="key">Tracked</span> Pass/fail, step breakdown, cost per run</li><li><span class="key">Gap</span> No unified audit dashboard</li></ul>
       </div>
-
-      <div class="d-card t-green">
-        <div class="d-hdr"><div class="d-ico">🔄</div><div><div class="d-ttl">Governance & Feedback</div><div class="d-sub">Human-in-the-Loop</div></div></div>
-        <ul class="d-list">
-          <li><span class="k">Channels</span> Email replies, Slack/Teams, ad-hoc messages</li>
-          <li><span class="k">Used For</span> Prompt refinements and baseline adjustments</li>
-          <li><span class="k">Baselines</span> Set with ops stakeholders, quarterly review</li>
-          <li><span class="k">Gap</span> No structured feedback form or scoring</li>
-        </ul>
+      <div class="card k-green"><div class="card-head"><div class="card-ico">🔄</div><div><div class="card-title">Governance & Feedback</div><div class="card-sub">Human-in-the-Loop</div></div></div>
+        <ul class="rows"><li><span class="key">Channels</span> Email replies, Slack/Teams, ad-hoc messages</li><li><span class="key">Used For</span> Prompt refinements and baseline adjustments</li><li><span class="key">Baselines</span> Set with ops stakeholders, quarterly review</li><li><span class="key">Gap</span> No structured feedback form or scoring</li></ul>
       </div>
-
-      <div class="gaps-card full">
-        <div class="d-hdr"><div class="d-ico" style="background:var(--amber-dim);">🚧</div><div><div class="d-ttl">Acknowledged Gaps — v2 Improvements</div><div class="d-sub">Transparency on What's Next</div></div></div>
+      <div class="gaps full"><div class="card-head"><div class="card-ico" style="background:#fef3c7;">🚧</div><div><div class="card-title">Acknowledged Gaps — v2 Roadmap</div><div class="card-sub">Transparency on What's Next</div></div></div>
         <div class="gap-grid">
           <div class="gap-item"><span class="gap-num">1</span> Output validation before sending — no auto-check against source data</div>
           <div class="gap-item"><span class="gap-num">2</span> Prompt version control — no formal versioning or rollback</div>
           <div class="gap-item"><span class="gap-num">3</span> Schema evolution — new clients/KPIs may require manual updates</div>
-          <div class="gap-item"><span class="gap-num">4</span> Recipient management — distribution list changes with role changes</div>
+          <div class="gap-item"><span class="gap-num">4</span> Recipient management — distribution list changes with roles</div>
           <div class="gap-item"><span class="gap-num">5</span> File retention — no archival or cleanup policy</div>
-          <div class="gap-item"><span class="gap-num">6</span> Delivery confirmation — no verification emails weren't spam-filtered</div>
+          <div class="gap-item"><span class="gap-num">6</span> Delivery confirmation — no verification against spam-filtering</div>
         </div>
       </div>
-
-      <div class="d-card t-blue full">
-        <div class="d-hdr"><div class="d-ico">🔧</div><div><div class="d-ttl">Full Technology Stack</div><div class="d-sub">Production Infrastructure</div></div></div>
-        <div class="stack">
-          <span class="sp" style="background:var(--sky-dim);color:var(--sky);border:1px solid rgba(14,165,233,0.3);">GPT Mini (prod)</span>
-          <span class="sp" style="background:rgba(148,163,184,0.1);color:#94a3b8;border:1px solid rgba(148,163,184,0.15);">Claude (eval'd)</span>
-          <span class="sp" style="background:rgba(148,163,184,0.1);color:#94a3b8;border:1px solid rgba(148,163,184,0.15);">Gemini (eval'd)</span>
-          <span class="sp" style="background:var(--violet-dim);color:var(--violet);border:1px solid rgba(139,92,246,0.3);">Relay.app</span>
-          <span class="sp" style="background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,158,11,0.3);">SharePoint</span>
-          <span class="sp" style="background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,158,11,0.3);">AWS Lambda</span>
-          <span class="sp" style="background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,158,11,0.3);">AWS EC2</span>
-          <span class="sp" style="background:var(--green-dim);color:var(--green);border:1px solid rgba(16,185,129,0.3);">Python</span>
-          <span class="sp" style="background:var(--green-dim);color:var(--green);border:1px solid rgba(16,185,129,0.3);">SQL</span>
-          <span class="sp" style="background:var(--green-dim);color:var(--green);border:1px solid rgba(16,185,129,0.3);">Excel (.xlsx)</span>
-          <span class="sp" style="background:var(--green-dim);color:var(--green);border:1px solid rgba(16,185,129,0.3);">Email / SMTP</span>
+      <div class="card full"><div class="card-head"><div class="card-ico">🔧</div><div><div class="card-title">Full Technology Stack</div><div class="card-sub">Production Infrastructure</div></div></div>
+        <div class="stack-wrap">
+          <span class="chip prod">GPT Mini (prod)</span><span class="chip eval">Claude (eval'd)</span><span class="chip eval">Gemini (eval'd)</span><span class="chip">Relay.app</span><span class="chip">SharePoint</span><span class="chip">AWS Lambda</span><span class="chip">AWS EC2</span><span class="chip">Python</span><span class="chip">SQL</span><span class="chip">Excel (.xlsx)</span><span class="chip">Email / SMTP</span>
         </div>
       </div>
-
     </div>
-    </div>
-  </div>
+  </section>
 
-  <!-- FOOTER -->
-  <div class="ftr">
-    <span>Alex Ovchinnikov</span>
-    <span style="color:var(--sky);">Confidential</span>
-    <span>v4.0</span>
-  </div>
-
+  <footer class="foot">
+    <span>Alex Ovchinnikov · Production AI Agent Builder</span>
+    <span class="conf">Confidential</span>
+    <span>v5.0</span>
+  </footer>
 </div>
 
 <script>
-function sw(id){
+/* ---- tabs ---- */
+function sw(id,el){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
-  document.getElementById('p-'+id).classList.add('on');
-  event.target.classList.add('on');
+  document.getElementById('p-'+id).classList.add('on'); el.classList.add('on');
+  window.scrollTo({top:0,behavior:'smooth'});
 }
+/* ---- count-up ---- */
+function countUp(el){
+  const to=+el.dataset.to,pre=el.dataset.prefix||'',suf=el.dataset.suffix||'';
+  let cur=0;const step=Math.max(1,Math.round(to/28));
+  const iv=setInterval(()=>{cur+=step;if(cur>=to){cur=to;clearInterval(iv);}el.textContent=pre+cur+suf;},22);
+}
+const metrics=document.getElementById('metrics');
+const cells=[...metrics.querySelectorAll('.hero-metric,.tile')];
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){cells.forEach((t,i)=>setTimeout(()=>{t.classList.add('in');const v=t.querySelector('[data-to]');if(v)countUp(v);},i*90));io.disconnect();}});},{threshold:.25});
+io.observe(metrics);
+
+/* ---- demo data: 5 days, exec + ops ---- */
+const F=(t)=>({t,cls:'flag'}), W=(t)=>({t,cls:'warn'}), B=(t)=>({t,cls:'b'}), P=(t)=>({t});
+const days=[
+  {time:'6:58 AM',
+   exec:[P('Good morning. Here’s where things stand as of today.\n\n'),P('Claims volume is '),F('tracking 4% above baseline'),P(' for the week. Average turnaround held steady at 2.1 days.\n\n'),W('One item to watch: '),P('denial rate crossed its threshold in the Western region ('),W('8.2% vs 6.5% target'),P('). Ops has been alerted separately.\n\n'),P('No data gaps. All KPIs grounded to current baselines.')],
+   ops:[B('ACTION — Denial rate breach\n'),P('Western region at '),W('8.2%'),P(' vs 6.5% target. Top driver: prior-auth mismatches, up 31% week-over-week.\n\n'),P('Review queue: 142 claims. Owner: Western ops lead. Recommend same-day triage.')]},
+  {time:'6:52 AM',
+   exec:[P('Good morning. Clean signal across the board today.\n\n'),P('Prior-auth approvals are up 6% week-over-week, volume within normal range. '),F('Turnaround improved to 1.8 days'),P(', the best mark in six weeks.\n\n'),P('All KPIs grounded to baseline. No anomalies flagged.')],
+   ops:[F('ALL CLEAR — No breaches\n'),P('Zero thresholds crossed. FYI: prior-auth backlog cleared 12% faster than last week.\n\n'),P('No action required. Next automated check: tomorrow 6:45 AM.')]},
+  {time:'6:55 AM',
+   exec:[P('Good morning. Savings continue to pace ahead of plan.\n\n'),F('Documented drug-cost savings reached $2.1M month-to-date'),P(', running 8% ahead of target. Member volume flat.\n\n'),W('One watch: '),P('specialty-Rx spend is up 5% in the Southeast. Trending toward, not yet breaching, its threshold.')],
+   ops:[W('WATCH — Approaching threshold\n'),P('Specialty-Rx spend '),W('+5% week-over-week'),P(' in the Southeast, within 1.2 points of target.\n\n'),P('No breach yet. Recommend monitoring. No action required today.')]},
+  {time:'7:01 AM',
+   exec:[P('Good morning. One operational signal worth your awareness.\n\n'),W('Enrollment inquiries spiked 22% overnight'),P(', most likely open-enrollment driven. Systems handled the load with no degradation, and average response time held at target.\n\n'),P('Flagged here for staffing awareness, not concern.')],
+   ops:[B('ACTION — Volume surge\n'),P('Inquiry volume '),W('+22% vs baseline'),P('. Current staffing model assumes +10%.\n\n'),P('Recommend surge coverage for the morning block. Owner: member-services lead.')]},
+  {time:'6:47 AM',
+   exec:[P('Good morning. A quiet, healthy day to report.\n\n'),F('All KPIs are within baseline'),P(' this morning. Claims, turnaround, denial rate, and cost are all green across every region.\n\n'),P('No anomalies, no data gaps. Steady state.')],
+   ops:[F('ALL CLEAR\n'),P('Zero threshold breaches. No items require action today.\n\n'),P('Next automated check: tomorrow 6:45 AM.')]}
+];
+const SIGN='\n\n— Generated autonomously · grounded to current baselines';
+
+let dayIdx=-1, stream='exec', gen=0, hasRun=false;
+
+function setStream(s){
+  stream=s;
+  document.getElementById('st-exec').classList.toggle('on',s==='exec');
+  document.getElementById('st-ops').classList.toggle('on',s==='ops');
+  document.getElementById('emeta').textContent = s==='exec' ? 'To: C-Suite · Daily Executive Summary' : 'To: Ops Leads · Threshold Alert';
+  if(dayIdx>=0){ typeBriefing(); }
+}
+
+function runDemo(){
+  const btn=document.getElementById('runBtn'); btn.disabled=true;
+  dayIdx=(dayIdx+1)%days.length;
+  const chips=[...document.querySelectorAll('.pchip')]; chips.forEach(c=>c.classList.remove('active','done'));
+  let ci=0;
+  const stage=setInterval(()=>{
+    if(ci>0)chips[ci-1].classList.replace('active','done');
+    if(ci<chips.length){chips[ci].classList.add('active');ci++;}
+    else{clearInterval(stage);chips[chips.length-1].classList.replace('active','done');typeBriefing(()=>{btn.disabled=false;if(!hasRun){hasRun=true;document.getElementById('cta').classList.add('show');}});}
+  },360);
+}
+
+function typeBriefing(done){
+  const out=document.getElementById('out'); out.innerHTML='';
+  const segs=[...days[dayIdx][stream],{t:SIGN,cls:'sign'}];
+  document.getElementById('emeta').textContent = stream==='exec' ? 'To: C-Suite · '+days[dayIdx].time+' · Daily Executive Summary' : 'To: Ops Leads · '+days[dayIdx].time+' · Threshold Alert';
+  const myGen=++gen;
+  const cur=document.createElement('span'); cur.className='cursor'; out.appendChild(cur);
+  let si=0;
+  function seg(){
+    if(myGen!==gen)return;
+    if(si>=segs.length){const c=out.querySelector('.cursor');if(c)c.remove();if(done)done();return;}
+    const s=segs[si++]; const node=document.createElement('span');
+    if(s.cls==='flag')node.className='flag'; else if(s.cls==='warn')node.className='warn'; else if(s.cls==='b')node.className=''; else if(s.cls==='sign')node.className='sign';
+    if(s.cls==='b'){node.innerHTML='<b></b>';}
+    out.insertBefore(node,out.querySelector('.cursor'));
+    const target=s.cls==='b'?node.querySelector('b'):node;
+    let ch=0;
+    const tv=setInterval(()=>{
+      if(myGen!==gen){clearInterval(tv);return;}
+      target.textContent+=s.t[ch++];
+      if(ch>=s.t.length){clearInterval(tv);seg();}
+    },s.cls==='sign'?10:14);
+  }
+  seg();
+}
+
+/* ---- B: assemble email at runtime, never in static source ---- */
+(function(){
+  var u=['hello'],d=['solution4you','pro'];
+  var addr=u.join('')+String.fromCharCode(64)+d.join('.');
+  var a=document.getElementById('ctaEmail');
+  if(a){a.textContent='· or email '+addr;a.href='mail'+'to:'+addr;}
+})();
 </script>
 </body>
 </html>
