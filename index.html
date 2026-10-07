@@ -211,7 +211,7 @@ h1{font-size:34px;font-weight:800;letter-spacing:-1.2px;line-height:1.05;}
       <div>
         <div class="kicker">Production AI System · Case Study</div>
         <h1>Executive Reporting AI Agent</h1>
-        <p class="subhead">An autonomous agent that ingested healthcare data, detected anomalies, and delivered tailored briefings to leadership before 7 AM. Every weekday, unattended, for over a year.</p>
+        <p class="subhead">An autonomous agent that turned healthcare ops data into tailored leadership briefings before 7 AM. Code flagged the anomalies. An LLM wrote the story. Every weekday, unattended, for over a year.</p>
       </div>
       <div class="contact">
         <div class="label">Built by</div>
@@ -263,11 +263,10 @@ h1{font-size:34px;font-weight:800;letter-spacing:-1.2px;line-height:1.05;}
       </div>
       <div class="pipe" id="pipe">
         <div class="pchip"><div class="pn">01</div><div class="pt">Poll</div></div>
-        <div class="pchip"><div class="pn">02</div><div class="pt">Validate</div></div>
-        <div class="pchip"><div class="pn">03</div><div class="pt">Read 7d</div></div>
-        <div class="pchip"><div class="pn">04</div><div class="pt">Analyze</div></div>
-        <div class="pchip"><div class="pn">05</div><div class="pt">Ground</div></div>
-        <div class="pchip"><div class="pn">06</div><div class="pt">Deliver</div></div>
+        <div class="pchip"><div class="pn">02</div><div class="pt">Check file</div></div>
+        <div class="pchip"><div class="pn">03</div><div class="pt">Read flags</div></div>
+        <div class="pchip"><div class="pn">04</div><div class="pt">Narrate</div></div>
+        <div class="pchip"><div class="pn">05</div><div class="pt">Deliver</div></div>
       </div>
       <div class="stream-tabs">
         <button class="stream-tab on" id="st-exec" onclick="setStream('exec')"><span class="si">👔</span>Exec Summary</button>
@@ -287,7 +286,7 @@ h1{font-size:34px;font-weight:800;letter-spacing:-1.2px;line-height:1.05;}
     <div class="ba">
       <div class="ba-card before"><div class="ba-label">Before</div><div class="ba-text"><strong>Manual Power BI dashboard.</strong> Analyst prep, technical navigation, daily refreshes. KPI breaches surfaced in meetings, not before them.</div></div>
       <div class="ba-arrow">→</div>
-      <div class="ba-card after"><div class="ba-label">After</div><div class="ba-text"><strong>Fully autonomous push-model.</strong> The agent ingested, detected, and delivered to execs and ops leaders before 7 AM. Unattended, every weekday.</div></div>
+      <div class="ba-card after"><div class="ba-label">After</div><div class="ba-text"><strong>Fully autonomous push-model.</strong> Code flagged, the model narrated, and the agent delivered to execs and ops leaders before 7 AM. Unattended, every weekday.</div></div>
     </div>
 
     <!-- pipeline -->
@@ -295,11 +294,11 @@ h1{font-size:34px;font-weight:800;letter-spacing:-1.2px;line-height:1.05;}
     <div class="pipeg">
       <div class="stage c-gray"><span class="sn">01</span><span class="si">🏥</span><div class="sl">Source</div><div class="st">Client Systems</div><div class="sd">Healthcare transactional data</div></div>
       <div class="stage c-gray"><span class="sn">02</span><span class="si">🗄️</span><div class="sl">Infrastructure</div><div class="st">AWS Databases</div><div class="sd">Production + staging pipeline</div></div>
-      <div class="stage c-gray"><span class="sn">03</span><span class="si">⚙️</span><div class="sl">Data Engineering</div><div class="st">Trim · Obfuscate · Aggregate</div><div class="sd">Python ETL with completeness checks</div></div>
-      <div class="stage c-amber"><span class="sn">04</span><span class="si">📂</span><div class="sl">Central Hub</div><div class="st">SharePoint</div><div class="sd">Daily files + KPI baseline targets</div></div>
-      <div class="stage c-accent"><span class="sn">05</span><span class="si">🔗</span><div class="sl">Orchestration</div><div class="st">AI Agent Platform</div><div class="sd">Polls, validates, reads 7-day window</div></div>
-      <div class="stage c-accent"><span class="sn">06</span><span class="si">🧠</span><div class="sl">Intelligence</div><div class="st">LLM Analysis</div><div class="sd">Won eval across frontier models on quality + cost</div></div>
-      <div class="stage c-violet"><span class="sn">07</span><span class="si">🛡️</span><div class="sl">Validation</div><div class="st">Grounding Layer</div><div class="sd">Baseline anchoring + field-level checks</div></div>
+      <div class="stage c-gray"><span class="sn">03</span><span class="si">⚙️</span><div class="sl">Data Engineering</div><div class="st">Trim · Obfuscate · Aggregate</div><div class="sd">Script 1: 7-day window, patient data obfuscated before aggregation</div></div>
+      <div class="stage c-violet"><span class="sn">04</span><span class="si">🛡️</span><div class="sl">Decision Layer</div><div class="st">Deterministic Flags</div><div class="sd">Script 2: baseline · allowlist · variance · completeness</div></div>
+      <div class="stage c-amber"><span class="sn">05</span><span class="si">📂</span><div class="sl">Central Hub</div><div class="st">SharePoint</div><div class="sd">Daily flagged payload + KPI baselines</div></div>
+      <div class="stage c-accent"><span class="sn">06</span><span class="si">🔗</span><div class="sl">Orchestration</div><div class="st">AI Agent Platform</div><div class="sd">Polls, checks freshness, routes</div></div>
+      <div class="stage c-accent"><span class="sn">07</span><span class="si">🧠</span><div class="sl">Narration</div><div class="st">LLM Writes, Never Decides</div><div class="sd">Two audience-specific prompts</div></div>
       <div class="stage c-green"><span class="sn">08</span><span class="si">📧</span><div class="sl">Output</div><div class="st">2 Email Streams</div><div class="sd">Exec summary + ops action alerts</div></div>
       <div class="stage c-green"><span class="sn">09</span><span class="si">👥</span><div class="sl">Delivery</div><div class="st">Stakeholders</div><div class="sd">C-suite + ops leads, before 7 AM</div></div>
     </div>
@@ -337,29 +336,29 @@ h1{font-size:34px;font-weight:800;letter-spacing:-1.2px;line-height:1.05;}
       <div class="card k-gray"><div class="card-head"><div class="card-ico">🏥</div><div><div class="card-title">Source Systems & AWS</div><div class="card-sub">Pre-existing Infrastructure</div></div></div>
         <ul class="rows"><li><span class="key">Sources</span> Healthcare client transactional systems</li><li><span class="key">Prod DB</span> AWS-hosted production database</li><li><span class="key">Staging</span> AWS staging for analytical workloads</li><li><span class="key">Ownership</span> Maintained by existing teams</li></ul>
       </div>
-      <div class="card k-gray"><div class="card-head"><div class="card-ico">⚙️</div><div><div class="card-title">Data Engineering Pipeline</div><div class="card-sub">ETL + File Generation</div></div></div>
-        <ul class="rows"><li><span class="key">Tech</span> Python + cron on AWS Lambda/EC2</li><li><span class="key">Process</span> Trim → Obfuscate → Aggregate</li><li><span class="key">Validation</span> Completeness checks before file gen</li><li><span class="key">Output</span> Dated daily Excel (.xlsx) to SharePoint</li></ul>
-        <div class="flow"><span class="hi">Staging</span> <span class="ar">→</span> <span class="ro">Trim</span> <span class="ar">→</span> <span class="ro">Obfuscate</span> <span class="ar">→</span> <span class="ro">Aggregate</span> <span class="ar">→</span> <span class="am">SharePoint</span></div>
+      <div class="card k-gray"><div class="card-head"><div class="card-ico">⚙️</div><div><div class="card-title">Data Engineering Pipeline</div><div class="card-sub">Two Sequential Python Scripts</div></div></div>
+        <ul class="rows"><li><span class="key">Tech</span> Python + cron on AWS Lambda/EC2</li><li><span class="key">Script 1</span> Trim to 7 days → obfuscate patient data → aggregate</li><li><span class="key">Script 2</span> Deterministic layer: baseline, allowlist, thresholds and variance, completeness</li><li><span class="key">Decides</span> Every flag, in code, before any model sees the data</li><li><span class="key">Output</span> Dated daily Excel (.xlsx) payload to SharePoint</li></ul>
+        <div class="flow"><span class="hi">Staging</span> <span class="ar">→</span> <span class="ro">Trim</span> <span class="ar">→</span> <span class="ro">Obfuscate</span> <span class="ar">→</span> <span class="ro">Aggregate</span> <span class="ar">→</span> <span class="hi">Flags</span> <span class="ar">→</span> <span class="am">SharePoint</span></div>
       </div>
       <div class="card k-amber"><div class="card-head"><div class="card-ico">📂</div><div><div class="card-title">SharePoint — Central Hub</div><div class="card-sub">File Storage & Baselines</div></div></div>
-        <ul class="rows"><li><span class="key">Daily Files</span> Dated Excel files, accumulating</li><li><span class="key">Baselines</span> Persistent KPI targets, set with ops leaders</li><li><span class="key">Review</span> Quarterly cadence for baseline updates</li><li><span class="key">History</span> Agent reads current + 6 prior days</li></ul>
+        <ul class="rows"><li><span class="key">Daily Files</span> Dated payloads with code-set flags</li><li><span class="key">Baselines</span> Persistent KPI targets, set with ops leaders</li><li><span class="key">Review</span> Quarterly cadence for baseline updates</li><li><span class="key">History</span> Current + 6 prior days, trimmed upstream</li></ul>
       </div>
-      <div class="card"><div class="card-head"><div class="card-ico">🔗</div><div><div class="card-title">AI Orchestration Layer</div><div class="card-sub">Trigger · Validate · Analyze</div></div></div>
-        <ul class="rows"><li><span class="key">Trigger</span> Polls SharePoint on schedule (pull, weekdays)</li><li><span class="key">Validate</span> Checks file presence + format</li><li><span class="key">On Fail</span> Alert email — does not silently skip</li><li><span class="key">Analysis</span> 7-day rolling window + baseline comparison</li><li><span class="key">Detection</span> Spikes, dips, and threshold breaches</li></ul>
-        <div class="flow"><span class="am">SP Poll</span> <span class="ar">→</span> <span class="hi">File Check</span> <span class="ar">→ [fail] →</span> <span class="ro">Alert</span><br><span class="hi">File Check</span> <span class="ar">→ [pass] →</span> <span class="hi">Read 7</span> <span class="ar">→</span> <span class="hi">Baselines</span> <span class="ar">→</span> <span class="hi">Analyze</span></div>
+      <div class="card"><div class="card-head"><div class="card-ico">🔗</div><div><div class="card-title">AI Orchestration Layer</div><div class="card-sub">Trigger · Check · Route</div></div></div>
+        <ul class="rows"><li><span class="key">Trigger</span> Polls SharePoint on schedule (pull, weekdays)</li><li><span class="key">Check</span> File present, fresh, correct format</li><li><span class="key">On Fail</span> Alert to builder + data engineering; execs get a fixed delay note; ops get nothing</li><li><span class="key">Role</span> Routing only. No detection in this layer.</li></ul>
+        <div class="flow"><span class="am">SP Poll</span> <span class="ar">→</span> <span class="hi">File Check</span> <span class="ar">→ [fail] →</span> <span class="ro">Alert + Delay Note</span><br><span class="hi">File Check</span> <span class="ar">→ [pass] →</span> <span class="hi">Read Flags</span> <span class="ar">→</span> <span class="hi">Narrate × 2</span></div>
       </div>
-      <div class="card"><div class="card-head"><div class="card-ico">🧠</div><div><div class="card-title">LLM Layer</div><div class="card-sub">Production Model</div></div></div>
-        <ul class="rows"><li><span class="key">Model</span> GPT Mini — won eval on quality/latency/cost</li><li><span class="key">Evaluated</span> Frontier models from OpenAI, Anthropic, and others</li><li><span class="key">Prompts</span> Iteratively evolved ("prompt skilling")</li><li><span class="key">Few-shot</span> What-good-looks-like examples embedded</li><li><span class="key">Cost</span> $0.50–$2.00 per daily run</li></ul>
+      <div class="card"><div class="card-head"><div class="card-ico">🧠</div><div><div class="card-title">LLM Layer</div><div class="card-sub">Narration Only</div></div></div>
+        <ul class="rows"><li><span class="key">Role</span> Explains code-decided flags. Never sets one.</li><li><span class="key">Model</span> GPT Mini — won eval on quality/latency/cost</li><li><span class="key">Evaluated</span> Frontier models from OpenAI, Anthropic, and others</li><li><span class="key">Prompts</span> One per audience, iteratively evolved</li><li><span class="key">Few-shot</span> What-good-looks-like examples embedded</li><li><span class="key">Cost</span> $0.50–$2.00 per daily run</li></ul>
       </div>
-      <div class="card k-violet"><div class="card-head"><div class="card-ico">🛡️</div><div><div class="card-title">Grounding & Validation</div><div class="card-sub">Hallucination Fix: 40% → ≤5%</div></div></div>
-        <ul class="rows"><li><span class="key">Problem</span> v0 fabricated names, products, flagged wrong anomalies</li><li><span class="key">Fix #1</span> Baseline file as source of truth for KPI targets</li><li><span class="key">Fix #2</span> Iterative prompt refinement with few-shot examples</li><li><span class="key">Fix #3</span> Field-level format validation at each step</li><li><span class="key">Result</span> ≤5% error ceiling — most runs zero errors</li></ul>
-        <div class="flow"><span class="ro">v0: 40%</span> <span class="ar">→</span> <span class="hi">+ Baselines</span> <span class="ar">→</span> <span class="hi">+ Prompt Skilling</span> <span class="ar">→</span> <span class="hi">+ Field Validation</span> <span class="ar">→</span> <span class="gr">≤5%</span></div>
+      <div class="card k-violet"><div class="card-head"><div class="card-ico">🛡️</div><div><div class="card-title">v0 → v1: Model Judgment to Code</div><div class="card-sub">Error Rate: 40% → ≤5%</div></div></div>
+        <ul class="rows"><li><span class="key">v0 POC</span> LLM decided what was anomalous. Fabricated names and products, flagged wrong KPIs</li><li><span class="key">Step 1</span> Prompt iterations. Helped.</li><li><span class="key">Step 2</span> Few-shot examples. Helped more. Not enough.</li><li><span class="key">v1 Prod</span> Every flag decision moved into deterministic Python: allowlist, baseline variance, thresholds, completeness gate</li><li><span class="key">Result</span> ≤5% error ceiling, most runs zero errors</li><li><span class="key">Lesson</span> Prompts reduce error. Code removes the decision.</li></ul>
+        <div class="flow"><span class="ro">v0: 40%</span> <span class="ar">→</span> <span class="hi">+ Prompts</span> <span class="ar">→</span> <span class="hi">+ Few-shot</span> <span class="ar">→</span> <span class="hi">+ Deterministic Code</span> <span class="ar">→</span> <span class="gr">≤5%</span></div>
       </div>
       <div class="card k-green"><div class="card-head"><div class="card-ico">📧</div><div><div class="card-title">Output & Delivery</div><div class="card-sub">Two Email Streams</div></div></div>
         <ul class="rows"><li><span class="key">Email #1</span> Executive Summary — strategic overview with trends</li><li><span class="key">Email #2</span> Ops Alerts — action-oriented, flags KPIs to investigate</li><li><span class="key">Timing</span> Early morning, Mon–Fri</li><li><span class="key">Impact</span> Execs informed before workday; ops act proactively</li></ul>
       </div>
       <div class="card k-rose"><div class="card-head"><div class="card-ico">⚠️</div><div><div class="card-title">Error Handling</div><div class="card-sub">Failure Paths</div></div></div>
-        <ul class="rows"><li><span class="key">Missing</span> Alert email → workflow halts</li><li><span class="key">Malformed</span> Validation fails → alert → halt</li><li><span class="key">API Down</span> Step error → manual retry</li><li><span class="key">No Fallback</span> No automatic model-fallback (v2)</li><li><span class="key">Quality</span> Incorrect successful output not auto-detected (v2)</li></ul>
+        <ul class="rows"><li><span class="key">Missing</span> Alert to builder + data eng → execs get delay note → halt</li><li><span class="key">Malformed</span> Validation fails → alert → halt</li><li><span class="key">API Down</span> Step error → manual retry</li><li><span class="key">No Fallback</span> No automatic model-fallback (v2)</li><li><span class="key">Quality</span> Incorrect successful output not auto-detected (v2)</li></ul>
       </div>
       <div class="card k-amber"><div class="card-head"><div class="card-ico">📊</div><div><div class="card-title">Logging & Audit Trail</div><div class="card-sub">Split Architecture</div></div></div>
         <ul class="rows"><li><span class="key">System A</span> Data Engineering — ETL and completeness logs</li><li><span class="key">System B</span> Orchestration platform — run/step logs</li><li><span class="key">Tracked</span> Pass/fail, step breakdown, cost per run</li><li><span class="key">Gap</span> No unified audit dashboard</li></ul>
@@ -387,7 +386,7 @@ h1{font-size:34px;font-weight:800;letter-spacing:-1.2px;line-height:1.05;}
 
   <footer class="foot">
     <span>Alex Ovchinnikov · Production AI Agent Builder</span>
-    <span>v5.0</span>
+    <span>v5.1</span>
   </footer>
 </div>
 
@@ -429,7 +428,7 @@ const days=[
    exec:[P('Good morning. A quiet, healthy day to report.\n\n'),F('All KPIs are within baseline'),P(' this morning. Claims, turnaround, denial rate, and cost are all green across every region.\n\n'),P('No anomalies, no data gaps. Steady state.')],
    ops:[F('ALL CLEAR\n'),P('Zero threshold breaches. No items require action today.\n\n'),P('Next automated check: tomorrow 6:45 AM.')]}
 ];
-const SIGN='\n\n— Generated autonomously · grounded to current baselines';
+const SIGN='\n\n· Flags set in code · narrated by AI';
 
 let dayIdx=-1, stream='exec', gen=0, hasRun=false;
 
