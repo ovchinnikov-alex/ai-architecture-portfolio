@@ -7,7 +7,7 @@
 
 <!-- Open Graph -->
 <meta property="og:title" content="Executive Reporting AI Agent: watch it run">
-<meta property="og:description" content="A production AI agent that wrote C-suite briefings before 7 AM every weekday in production. Click to watch a sample briefing generate. ~$1/day. Healthcare, HIPAA-safe.">
+<meta property="og:description" content="A production AI agent that wrote C-suite briefings before 7 AM every weekday in production. Click to watch a sample briefing generate. ~$1/day. Healthcare, PHI obfuscated upstream.">
 <meta property="og:image" content="https://ovchinnikov-alex.github.io/ai-architecture-portfolio/preview.png">
 <meta property="og:url" content="https://ovchinnikov-alex.github.io/ai-architecture-portfolio/">
 <meta name="twitter:card" content="summary_large_image">
@@ -73,6 +73,11 @@ h1{font-size:34px;font-weight:800;letter-spacing:-1.2px;line-height:1.05;}
 .tile .v small{font-size:13px;font-weight:600;color:var(--faint);}
 .tile .l{font-size:10px;font-weight:600;color:var(--dim);text-transform:uppercase;margin-top:8px;line-height:1.35;letter-spacing:.3px;}
 .tile.g .v{color:var(--green);}
+.ns{display:grid;grid-template-columns:1fr 2fr;gap:14px;margin-bottom:26px;}
+.ns-metric{background:linear-gradient(135deg,var(--accent),#0369a1);border-radius:16px;padding:24px;color:#fff;display:flex;flex-direction:column;justify-content:flex-end;}
+.ns-metric .ns-eyebrow{font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;opacity:.85;margin-bottom:auto;}
+.ns-metric .v{font-size:66px;font-weight:800;letter-spacing:-3px;line-height:.9;margin-top:18px;}
+.ns-metric .l{font-size:14px;color:rgba(255,255,255,.92);margin-top:12px;line-height:1.4;font-weight:500;}
 
 /* DEMO */
 .demo{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 4px 18px rgba(15,23,42,.05);margin-bottom:30px;}
@@ -199,7 +204,7 @@ h1{font-size:34px;font-weight:800;letter-spacing:-1.2px;line-height:1.05;}
 }
 @media(max-width:600px){
   .grid6{grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(3,1fr);}
-  .pipeg,.impact,.d-grid,.gap-grid{grid-template-columns:1fr;}
+  .pipeg,.impact,.d-grid,.gap-grid,.ns{grid-template-columns:1fr;}
   .contact{text-align:left;}.tab{padding:8px 10px;font-size:12px;}.tab-group{display:flex;width:100%;}.tab-group .tab{flex:1;}
 }
 </style>
@@ -224,7 +229,7 @@ h1{font-size:34px;font-weight:800;letter-spacing:-1.2px;line-height:1.05;}
     <div class="badges">
       <span class="badge live"><span class="dot"></span>Ran in Production</span>
       <span class="badge">Ran Every Weekday</span>
-      <span class="badge">HIPAA Compliant · PHI Protected</span>
+      <span class="badge">PHI Obfuscated Upstream</span>
       <span class="badge">~$1/day Operating Cost</span>
     </div>
   </header>
@@ -240,17 +245,17 @@ h1{font-size:34px;font-weight:800;letter-spacing:-1.2px;line-height:1.05;}
 
   <!-- EXEC -->
   <section id="p-exec" class="panel on">
-    <h2 class="exec-headline">The morning report <em>writes itself</em> before anyone logs in.</h2>
-    <p class="exec-sub">No dashboard to open. No analyst to prep it. The numbers that matter, the anomalies worth knowing, and the actions to take, delivered to the right inbox at the right altitude.</p>
+    <h2 class="exec-headline">Leaders knew <em>what broke overnight</em> before the workday started.</h2>
+    <p class="exec-sub">Code decided every flag. AI explained it. About a dollar a day.</p>
 
     <!-- combo metrics -->
     <div class="metrics" id="metrics">
       <div class="hero-metric"><div class="v num" data-to="70" data-suffix="%">0%</div><div class="l">Manual reporting overhead eliminated</div></div>
       <div class="grid6">
-        <div class="tile"><div class="v num">~2<small> FTE</small></div><div class="l">Analyst Time Recaptured</div></div>
+        <div class="tile"><div class="v num">10<small> hrs/wk</small></div><div class="l">Manual Reporting Replaced</div></div>
         <div class="tile"><div class="v num">40→5<small>%</small></div><div class="l">AI Error Rate Reduced</div></div>
         <div class="tile g"><div class="v num" data-prefix="~$" data-to="1" data-suffix="/day">~$0/day</div><div class="l">Total Operating Cost</div></div>
-        <div class="tile"><div class="v num" data-to="3">0</div><div class="l">Power BI Seats Freed</div></div>
+        <div class="tile"><div class="v num" data-to="85" data-suffix="%">0%</div><div class="l">Weekly Active Use</div></div>
         <div class="tile"><div class="v num">7<small> AM</small></div><div class="l">Insights Delivered Daily</div></div>
         <div class="tile"><div class="v num">5<small>/wk</small></div><div class="l">Unattended Runs</div></div>
       </div>
@@ -260,7 +265,7 @@ h1{font-size:34px;font-weight:800;letter-spacing:-1.2px;line-height:1.05;}
     <div class="eyebrow">See it work · live demo</div>
     <div class="demo">
       <div class="demo-head">
-        <div class="demo-title">Watch the agent <span>produce a morning briefing</span><span class="ds">Each run reflects a different day. Two streams: one for execs, one for ops.</span></div>
+        <div class="demo-title">Watch the agent <span>produce a morning briefing</span><span class="ds">Sample data, not client figures. Each run reflects a different day. Two streams: one for execs, one for ops.</span></div>
         <button class="run" id="runBtn" onclick="runDemo()"><span class="pulse"></span> Watch it run</button>
       </div>
       <div class="pipe" id="pipe">
@@ -289,7 +294,7 @@ h1{font-size:34px;font-weight:800;letter-spacing:-1.2px;line-height:1.05;}
     <div class="ba">
       <div class="ba-card before"><div class="ba-label">Before</div><div class="ba-text"><strong>Manual Power BI dashboard.</strong> Analyst prep, technical navigation, daily refreshes. KPI breaches surfaced in meetings, not before them.</div></div>
       <div class="ba-arrow">→</div>
-      <div class="ba-card after"><div class="ba-label">After</div><div class="ba-text"><strong>Fully autonomous push-model.</strong> Code flagged, the model narrated, and the agent delivered to execs and ops leaders before 7 AM. Unattended, every weekday.</div></div>
+      <div class="ba-card after"><div class="ba-label">After</div><div class="ba-text"><strong>Pushed to readers, unattended.</strong> Code flagged, the model narrated, and the agent delivered to execs and ops leaders before 7 AM. Unattended, every weekday.</div></div>
     </div>
 
     <!-- pipeline -->
@@ -318,16 +323,16 @@ h1{font-size:34px;font-weight:800;letter-spacing:-1.2px;line-height:1.05;}
       </div>
       <div class="imp i2"><div class="imp-head"><div class="imp-ico">📋</div><div><div class="imp-title">Ops Leaders</div><div class="imp-tag">Proactive Response</div></div></div>
         <ul>
-          <li><span class="ck">✓</span><span><strong>Alerts only on threshold breaches</strong>: zero noise</span></li>
+          <li><span class="ck">✓</span><span><strong>Threshold breaches flagged in code</strong>: no hunting through dashboards</span></li>
           <li><span class="ck">✓</span><span><strong>Prep before exec meetings</strong>: not scrambling during</span></li>
           <li><span class="ck">✓</span><span><strong>Clear accountability</strong>: each alert points to an area</span></li>
         </ul>
       </div>
       <div class="imp i3"><div class="imp-head"><div class="imp-ico">🏢</div><div><div class="imp-title">Organization</div><div class="imp-tag">Operational ROI</div></div></div>
         <ul>
-          <li><span class="ck">✓</span><span><strong>70% manual overhead eliminated</strong>: analysts do higher-value work</span></li>
+          <li><span class="ck">✓</span><span><strong>70% manual reporting overhead eliminated</strong>: analysts do higher-value work</span></li>
           <li><span class="ck">✓</span><span><strong>~$1/day fully loaded</strong>: replaces hours of analyst time</span></li>
-          <li><span class="ck">✓</span><span><strong>Power BI dependency removed</strong> for daily exec decisions</span></li>
+          <li><span class="ck">✓</span><span><strong>No dashboard login</strong> needed for the daily brief</span></li>
         </ul>
       </div>
     </div>
@@ -335,8 +340,15 @@ h1{font-size:34px;font-weight:800;letter-spacing:-1.2px;line-height:1.05;}
 
   <!-- PRODUCT -->
   <section id="p-pm" class="panel">
-    <h2 class="exec-headline">Same agent, <em>product lens</em>.</h2>
-    <p class="exec-sub">How the problem was framed, what the model was and was not allowed to do, how it was accepted, and how people adopted it.</p>
+    <h2 class="exec-headline">The point was not automation. It was <em>leaders actually reading it</em>.</h2>
+    <p class="exec-sub">Executives struggled to pull decision-critical insight out of a Power BI dashboard. The bet: push a short, trusted brief to them instead.</p>
+    <div class="ns">
+      <div class="ns-metric"><div class="ns-eyebrow">North Star</div><div class="v">85%</div><div class="l">Weekly active use across 12 executives and managers on 4 teams</div></div>
+      <div class="card ns-story"><div class="card-head"><div class="card-ico">🧭</div><div><div class="card-title">From Problem to Result</div><div class="card-sub">How Each Metric Earned Its Place</div></div></div>
+        <ul class="rows"><li><span class="key">Problem</span> Leaders could not get to the insight in the dashboard; breaches surfaced in meetings</li><li><span class="key">Bet</span> Push, not pull: a brief per audience, in the inbox before 7 AM</li><li><span class="key">Guardrail</span> Error rate 40% → &lt;5%, by moving every flag decision into code</li><li><span class="key">Result</span> 85% weekly active use; 70% less manual reporting overhead</li><li><span class="key">Speed</span> POC to production in 7 weeks</li></ul>
+      </div>
+    </div>
+    <div class="eyebrow" style="margin-top:6px">The work behind it</div>
     <div class="d-grid">
       <div class="card"><div class="card-head"><div class="card-ico">🎯</div><div><div class="card-title">Problem & Users</div><div class="card-sub">Who It Served, What Was Broken</div></div></div>
         <ul class="rows"><li><span class="key">Problem</span> KPI breaches surfaced in meetings, not before them</li><li><span class="key">Before</span> Manual Power BI dashboard, analyst prep, daily refreshes</li><li><span class="key">Users</span> C-suite (strategic summary) and ops leaders (action alerts)</li><li><span class="key">Success</span> Brief in the right inbox before 7 AM, weekdays, unattended</li></ul>
@@ -348,10 +360,10 @@ h1{font-size:34px;font-weight:800;letter-spacing:-1.2px;line-height:1.05;}
         <ul class="rows"><li><span class="key">Specs</span> Wrote requirements and acceptance criteria</li><li><span class="key">UAT</span> UAT plans; end-to-end pipeline tests with data engineering</li><li><span class="key">Release</span> Release vs remediate calls from UAT results</li></ul>
       </div>
       <div class="card k-amber"><div class="card-head"><div class="card-ico">🤝</div><div><div class="card-title">Stakeholders & Baselines</div><div class="card-sub">Who Owned What</div></div></div>
-        <ul class="rows"><li><span class="key">Baselines</span> KPI targets set with ops leaders</li><li><span class="key">Review</span> Quarterly baseline review</li><li><span class="key">Feedback</span> Email, Slack/Teams replies drove prompt and baseline changes</li><li><span class="key">Partners</span> Data engineering hosted and scheduled the scripts</li></ul>
+        <ul class="rows"><li><span class="key">Baselines</span> KPI targets set with ops leaders</li><li><span class="key">Review</span> Quarterly baseline review</li><li><span class="key">Feedback</span> Email, Slack/Teams replies drove prompt and baseline changes</li><li><span class="key">Ownership</span> Alex designed and wrote the flag logic; data engineering hosted and scheduled it</li></ul>
       </div>
       <div class="card k-green"><div class="card-head"><div class="card-ico">📈</div><div><div class="card-title">Outcomes</div><div class="card-sub">What Changed</div></div></div>
-        <ul class="rows"><li><span class="key">Overhead</span> 70% manual reporting overhead eliminated</li><li><span class="key">Capacity</span> ~2 FTE of analyst time recaptured</li><li><span class="key">Spend</span> 3 Power BI seats freed; ~$1/day to run</li><li><span class="key">Quality</span> Error rate 40% → ≤5%</li></ul>
+        <ul class="rows"><li><span class="key">Overhead</span> 70% manual reporting overhead eliminated</li><li><span class="key">Capacity</span> 10 hrs/wk of manual reporting replaced</li><li><span class="key">Spend</span> ~$1/day to run</li><li><span class="key">Quality</span> Error rate 40% → &lt;5%</li></ul>
         <div class="flow"><span class="ro">v0 POC</span> <span class="ar">→</span> <span class="hi">+ Prompts</span> <span class="ar">→</span> <span class="hi">+ Few-shot</span> <span class="ar">→</span> <span class="hi">+ Code owns flags</span> <span class="ar">→</span> <span class="gr">Production</span></div>
       </div>
       <div class="card"><div class="card-head"><div class="card-ico">🚀</div><div><div class="card-title">Adoption & Operations</div><div class="card-sub">After Go-Live</div></div></div>
@@ -380,9 +392,9 @@ h1{font-size:34px;font-weight:800;letter-spacing:-1.2px;line-height:1.05;}
       <div class="card"><div class="card-head"><div class="card-ico">🧠</div><div><div class="card-title">LLM Layer</div><div class="card-sub">Narration Only</div></div></div>
         <ul class="rows"><li><span class="key">Role</span> Explains code-decided flags. Never sets one.</li><li><span class="key">Model</span> GPT Mini, won eval on quality/latency/cost</li><li><span class="key">Evaluated</span> Frontier models from OpenAI, Anthropic, and others</li><li><span class="key">Prompts</span> One per audience, iteratively evolved</li><li><span class="key">Few-shot</span> What-good-looks-like examples embedded</li><li><span class="key">Cost</span> $0.50–$2.00 per daily run</li></ul>
       </div>
-      <div class="card k-violet"><div class="card-head"><div class="card-ico">🛡️</div><div><div class="card-title">v0 → v1: Model Judgment to Code</div><div class="card-sub">Error Rate: 40% → ≤5%</div></div></div>
-        <ul class="rows"><li><span class="key">v0 POC</span> LLM decided what was anomalous. Fabricated names and products, flagged wrong KPIs</li><li><span class="key">Step 1</span> Prompt iterations. Helped.</li><li><span class="key">Step 2</span> Few-shot examples. Helped more. Not enough.</li><li><span class="key">v1 Prod</span> Every flag decision moved into deterministic Python: allowlist, baseline variance, thresholds, completeness gate</li><li><span class="key">Result</span> ≤5% error ceiling, most runs zero errors</li><li><span class="key">Lesson</span> Prompts reduce error. Code removes the decision.</li></ul>
-        <div class="flow"><span class="ro">v0: 40%</span> <span class="ar">→</span> <span class="hi">+ Prompts</span> <span class="ar">→</span> <span class="hi">+ Few-shot</span> <span class="ar">→</span> <span class="hi">+ Deterministic Code</span> <span class="ar">→</span> <span class="gr">≤5%</span></div>
+      <div class="card k-violet"><div class="card-head"><div class="card-ico">🛡️</div><div><div class="card-title">v0 → v1: Model Judgment to Code</div><div class="card-sub">Error Rate: 40% → &lt;5%</div></div></div>
+        <ul class="rows"><li><span class="key">v0 POC</span> LLM decided what was anomalous. Fabricated names and products, flagged wrong KPIs</li><li><span class="key">Step 1</span> Prompt iterations. Helped.</li><li><span class="key">Step 2</span> Few-shot examples. Helped more. Not enough.</li><li><span class="key">v1 Prod</span> Every flag decision moved into deterministic Python: allowlist, baseline variance, thresholds, completeness gate</li><li><span class="key">Result</span> &lt;5% error ceiling, most runs zero errors</li><li><span class="key">Lesson</span> Prompts reduce error. Code removes the decision.</li></ul>
+        <div class="flow"><span class="ro">v0: 40%</span> <span class="ar">→</span> <span class="hi">+ Prompts</span> <span class="ar">→</span> <span class="hi">+ Few-shot</span> <span class="ar">→</span> <span class="hi">+ Deterministic Code</span> <span class="ar">→</span> <span class="gr">&lt;5%</span></div>
       </div>
       <div class="card k-green"><div class="card-head"><div class="card-ico">📧</div><div><div class="card-title">Output & Delivery</div><div class="card-sub">Two Email Streams</div></div></div>
         <ul class="rows"><li><span class="key">Email #1</span> Executive Summary: strategic overview with trends</li><li><span class="key">Email #2</span> Ops Alerts: action-oriented, flags KPIs to investigate</li><li><span class="key">Timing</span> Early morning, Mon–Fri</li><li><span class="key">Impact</span> Execs informed before workday; ops act proactively</li></ul>
@@ -416,7 +428,7 @@ h1{font-size:34px;font-weight:800;letter-spacing:-1.2px;line-height:1.05;}
 
   <footer class="foot">
     <span>Alex Ovchinnikov · Production AI Agent Builder</span>
-    <span>v5.3</span>
+    <span>v5.4</span>
   </footer>
 </div>
 
@@ -444,7 +456,7 @@ const F=(t)=>({t,cls:'flag'}), W=(t)=>({t,cls:'warn'}), B=(t)=>({t,cls:'b'}), P=
 const days=[
   {time:'6:58 AM',
    exec:[P('Good morning. Here’s where things stand as of today.\n\n'),P('Claims volume is '),F('tracking 4% above baseline'),P(' for the week. Average turnaround held steady at 2.1 days.\n\n'),W('One item to watch: '),P('denial rate crossed its threshold in the Western region ('),W('8.2% vs 6.5% target'),P('). Ops has been alerted separately.\n\n'),P('No data gaps. All KPIs grounded to current baselines.')],
-   ops:[B('ACTION: Denial rate breach\n'),P('Western region at '),W('8.2%'),P(' vs 6.5% target. Top driver: prior-auth mismatches, up 31% week-over-week.\n\n'),P('Review queue: 142 claims. Owner: Western ops lead. Recommend same-day triage.')]},
+   ops:[B('ACTION: Denial rate breach\n'),P('Western region at '),W('8.2%'),P(' vs 6.5% target. Prior-auth mismatches also flagged, up 31% week-over-week.\n\n'),P('Review queue: 142 claims. Owner: Western ops lead. Recommend same-day triage.')]},
   {time:'6:52 AM',
    exec:[P('Good morning. Clean signal across the board today.\n\n'),P('Prior-auth approvals are up 6% week-over-week, volume within normal range. '),F('Turnaround improved to 1.8 days'),P(', the best mark in six weeks.\n\n'),P('All KPIs grounded to baseline. No anomalies flagged.')],
    ops:[F('ALL CLEAR: No breaches\n'),P('Zero thresholds crossed. FYI: prior-auth backlog cleared 12% faster than last week.\n\n'),P('No action required. Next automated check: tomorrow 6:45 AM.')]},
