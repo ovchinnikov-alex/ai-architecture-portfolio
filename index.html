@@ -7,7 +7,7 @@
 
 <!-- Open Graph -->
 <meta property="og:title" content="Executive Reporting AI Agent: watch it run">
-<meta property="og:description" content="A production AI agent that wrote C-suite briefings before 7 AM every weekday for a full year. Click to watch a sample briefing generate. ~$1/day. Healthcare, HIPAA-safe.">
+<meta property="og:description" content="A production AI agent that wrote C-suite briefings before 7 AM every weekday in production. Click to watch a sample briefing generate. ~$1/day. Healthcare, HIPAA-safe.">
 <meta property="og:image" content="https://ovchinnikov-alex.github.io/ai-architecture-portfolio/preview.png">
 <meta property="og:url" content="https://ovchinnikov-alex.github.io/ai-architecture-portfolio/">
 <meta name="twitter:card" content="summary_large_image">
@@ -88,6 +88,7 @@ h1{font-size:34px;font-weight:800;letter-spacing:-1.2px;line-height:1.05;}
 .pipe{display:flex;gap:7px;margin-bottom:16px;flex-wrap:wrap;}
 .pchip{flex:1;min-width:84px;background:#f8fafc;border:1px solid var(--line-soft);border-radius:9px;padding:9px 8px;text-align:center;transition:.3s;}
 .pchip .pn{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--faint);}
+.pipe-status{font-size:12.5px;color:var(--dim);margin:-8px 0 14px;min-height:18px;font-family:'JetBrains Mono',monospace;}
 .pchip .pt{font-size:11px;font-weight:700;color:var(--dim);margin-top:2px;transition:.3s;}
 .pchip.active{background:var(--accent-tint);border-color:var(--accent);transform:translateY(-2px);}
 .pchip.active .pt{color:var(--accent);}
@@ -211,7 +212,7 @@ h1{font-size:34px;font-weight:800;letter-spacing:-1.2px;line-height:1.05;}
       <div>
         <div class="kicker">Production AI System · Case Study</div>
         <h1>Executive Reporting AI Agent</h1>
-        <p class="subhead">An autonomous agent that turned healthcare ops data into tailored leadership briefings before 7 AM. Code flagged the anomalies. An LLM wrote the story. Every weekday, unattended, for a full year.</p>
+        <p class="subhead">An autonomous agent that turned healthcare ops data into tailored leadership briefings before 7 AM. Code flagged the anomalies. An LLM wrote the story. Every weekday, unattended, in production.</p>
       </div>
       <div class="contact">
         <div class="label">Built by</div>
@@ -221,7 +222,7 @@ h1{font-size:34px;font-weight:800;letter-spacing:-1.2px;line-height:1.05;}
       </div>
     </div>
     <div class="badges">
-      <span class="badge live"><span class="dot"></span>Ran in Production a Full Year</span>
+      <span class="badge live"><span class="dot"></span>Ran in Production</span>
       <span class="badge">Ran Every Weekday</span>
       <span class="badge">HIPAA Compliant · PHI Protected</span>
       <span class="badge">~$1/day Operating Cost</span>
@@ -269,6 +270,7 @@ h1{font-size:34px;font-weight:800;letter-spacing:-1.2px;line-height:1.05;}
         <div class="pchip"><div class="pn">04</div><div class="pt">Narrate</div></div>
         <div class="pchip"><div class="pn">05</div><div class="pt">Deliver</div></div>
       </div>
+      <div class="pipe-status" id="pipeStatus"></div>
       <div class="stream-tabs">
         <button class="stream-tab on" id="st-exec" onclick="setStream('exec')"><span class="si">👔</span>Exec Summary</button>
         <button class="stream-tab" id="st-ops" onclick="setStream('ops')"><span class="si">📋</span>Ops Alert</button>
@@ -414,7 +416,7 @@ h1{font-size:34px;font-weight:800;letter-spacing:-1.2px;line-height:1.05;}
 
   <footer class="foot">
     <span>Alex Ovchinnikov · Production AI Agent Builder</span>
-    <span>v5.2</span>
+    <span>v5.3</span>
   </footer>
 </div>
 
@@ -472,12 +474,16 @@ function runDemo(){
   const btn=document.getElementById('runBtn'); btn.disabled=true;
   dayIdx=(dayIdx+1)%days.length;
   const chips=[...document.querySelectorAll('.pchip')]; chips.forEach(c=>c.classList.remove('active','done'));
+  const status=document.getElementById('pipeStatus');
+  const msgs=['Polling SharePoint for today\'s file...','Checking the file is present, fresh and well-formed...','Reading flags already set upstream by deterministic code...','LLM writing two briefs: one for execs, one for ops...','Sending both emails before 7 AM...'];
+  gen++; document.getElementById('out').innerHTML='<span style="color:var(--faint)">Waiting for the pipeline...</span>';
   let ci=0;
-  const stage=setInterval(()=>{
+  const step=()=>{
     if(ci>0)chips[ci-1].classList.replace('active','done');
-    if(ci<chips.length){chips[ci].classList.add('active');ci++;}
-    else{clearInterval(stage);chips[chips.length-1].classList.replace('active','done');typeBriefing(()=>{btn.disabled=false;if(!hasRun){hasRun=true;document.getElementById('cta').classList.add('show');}});}
-  },360);
+    if(ci<chips.length){chips[ci].classList.add('active');status.textContent=msgs[ci]||'';ci++;setTimeout(step,1500);}
+    else{status.textContent='Delivered.';typeBriefing(()=>{btn.disabled=false;if(!hasRun){hasRun=true;document.getElementById('cta').classList.add('show');}});}
+  };
+  step();
 }
 
 function typeBriefing(done){
@@ -500,7 +506,7 @@ function typeBriefing(done){
       if(myGen!==gen){clearInterval(tv);return;}
       target.textContent+=s.t[ch++];
       if(ch>=s.t.length){clearInterval(tv);seg();}
-    },s.cls==='sign'?10:14);
+    },s.cls==='sign'?12:20);
   }
   seg();
 }
